@@ -1,0 +1,23 @@
+spring:
+  data:
+    mongodb:
+      database: payments-db
+      host: localhost
+      port: 27017
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+payment:
+  hash-length: 50
+  url: localhost:3000/crypto-payment
+
+springfox:
+  documentation:
+    open-api:
+      v3:
+        path: /api-docs
+
+
+
+
