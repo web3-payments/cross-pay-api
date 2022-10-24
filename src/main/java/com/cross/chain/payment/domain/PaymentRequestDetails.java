@@ -1,7 +1,7 @@
 package com.cross.chain.payment.domain;
 
-import com.cross.chain.payment.model.CurrencySupported;
-import com.cross.chain.payment.model.PaymentType;
+import com.cross.chain.payment.dto.CurrencySupported;
+import com.cross.chain.payment.dto.PaymentType;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;

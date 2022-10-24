@@ -1,7 +1,7 @@
 package com.cross.chain.payment.mapper;
 
 import com.cross.chain.payment.domain.PaymentRequestDetails;
-import com.cross.chain.payment.model.PaymentRequest;
+import com.cross.chain.payment.dto.PaymentRequest;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

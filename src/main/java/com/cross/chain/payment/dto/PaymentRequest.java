@@ -1,4 +1,4 @@
-package com.cross.chain.payment.model;
+package com.cross.chain.payment.dto;
 
 import com.cross.chain.payment.validators.EnumValuePattern;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,7 +9,6 @@ import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 

@@ -1,8 +1,8 @@
-package com.cross.chain.payment.service;
+package com.cross.chain.payment.service.payment;
 
-import com.cross.chain.payment.model.PaymentRequest;
-import com.cross.chain.payment.model.PaymentResponse;
-import com.cross.chain.payment.model.PaymentType;
+import com.cross.chain.payment.dto.PaymentRequest;
+import com.cross.chain.payment.dto.PaymentResponse;
+import com.cross.chain.payment.dto.PaymentType;
 
 public interface PaymentRequestService {
 

@@ -1,4 +1,4 @@
-package com.cross.chain.payment.model;
+package com.cross.chain.payment.dto;
 
 import lombok.Builder;
 import lombok.Data;

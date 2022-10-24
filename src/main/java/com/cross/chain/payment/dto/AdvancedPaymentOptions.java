@@ -1,4 +1,4 @@
-package com.cross.chain.payment.model;
+package com.cross.chain.payment.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

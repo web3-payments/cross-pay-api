@@ -1,10 +1,10 @@
-package com.cross.chain.payment.service;
+package com.cross.chain.payment.service.payment;
 
 import com.cross.chain.payment.domain.PaymentRequestDetails;
 import com.cross.chain.payment.mapper.PaymentRequestMapper;
-import com.cross.chain.payment.model.PaymentRequest;
-import com.cross.chain.payment.model.PaymentResponse;
-import com.cross.chain.payment.model.PaymentType;
+import com.cross.chain.payment.dto.PaymentRequest;
+import com.cross.chain.payment.dto.PaymentResponse;
+import com.cross.chain.payment.dto.PaymentType;
 import com.cross.chain.payment.repository.PaymentRequestRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
