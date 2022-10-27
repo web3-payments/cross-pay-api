@@ -1,7 +1,7 @@
 package com.cross.chain.payment.controller.user;
 
-import com.cross.chain.payment.exception.UserNotFoundException;
 import com.cross.chain.payment.dto.UserRequest;
+import com.cross.chain.payment.exception.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -28,6 +28,12 @@ public interface UserApiController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserRequest.class))) })
     ResponseEntity<UserRequest> createUser(@Parameter(in = ParameterIn.DEFAULT, description = "Created user object", schema=@Schema()) @Valid @RequestBody UserRequest body);
+
+    @Operation(summary = "Update user", description = "This can only be done by the logged in user.", tags={ "user" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation") })
+    ResponseEntity<UserRequest> updateUser(@Parameter(in = ParameterIn.PATH, description = "username that need to be updated", required=true, schema=@Schema()) @PathVariable("address") String address,
+                                    @Parameter(in = ParameterIn.DEFAULT, description = "Update an existent user", schema=@Schema()) @Valid @RequestBody UserRequest body) throws UserNotFoundException;
 
     @Operation(summary = "get all payments with filter", tags={ "user" })
     @ApiResponses(value = {

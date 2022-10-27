@@ -1,5 +1,6 @@
 package com.cross.chain.payment.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -15,11 +16,16 @@ import java.util.List;
 @Data
 @Builder
 @Validated
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserRequest {
 
-  @JsonProperty("name")
-  @Schema(example = "Bob John")
-  private String name;
+  @JsonProperty("firstName")
+  @Schema(example = "Bob")
+  private String firstName;
+
+  @JsonProperty("lastName")
+  @Schema(example = "John")
+  private String lastName;
 
   @JsonProperty("signerAddress")
   @Schema(example = "0x4279953514f0009c5cb371df4d530f6fee0ede17")

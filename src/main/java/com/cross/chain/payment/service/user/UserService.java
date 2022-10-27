@@ -5,7 +5,9 @@ import com.cross.chain.payment.dto.UserRequest;
 
 public interface UserService {
 
-    UserRequest registerUser(UserRequest userRequest);
+    UserRequest save(UserRequest userRequest);
 
     UserRequest retrieveUser(String address) throws UserNotFoundException;
+
+    UserRequest update(UserRequest userRequest) throws UserNotFoundException;
 }
