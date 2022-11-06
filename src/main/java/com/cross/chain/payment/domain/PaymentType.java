@@ -1,4 +1,4 @@
-package com.cross.chain.payment.dto;
+package com.cross.chain.payment.domain;
 
 /**
  * Payment types

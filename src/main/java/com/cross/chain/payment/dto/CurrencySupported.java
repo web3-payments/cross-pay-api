@@ -7,7 +7,7 @@ public enum CurrencySupported {
 
     //TODO: MIGRATE TO A DATABASE THIS INFORMATION
     SOL("SOL"),
-    ETHER("ETHER"),
+    ETH("ETH"),
     BTC("BTC");
 
   private String value;

@@ -1,5 +1,7 @@
 package com.cross.chain.payment.dto;
 
+import com.cross.chain.payment.domain.PaymentStatus;
+import com.cross.chain.payment.domain.PaymentType;
 import com.cross.chain.payment.validators.EnumValuePattern;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -38,6 +41,12 @@ public class PaymentRequest   {
   @Schema(example = "PAYMENT_LINK")
   @JsonProperty("paymentType")
   private PaymentType paymentType;
+
+  @JsonProperty("hash")
+  private String hash;
+
+  @JsonProperty("createdAt")
+  private Instant createdAt;
 
   @Valid
   @Schema(example = "55.34", description = "")
@@ -71,8 +80,18 @@ public class PaymentRequest   {
   private List<ProductResponse> products;
 
   @Valid
-  @JsonProperty("customer")
-  private CustomerResponse customer;
+  @Schema(example = "0x4279953514f0009c5cb371df4d530f6fee0ede17")
+  @JsonProperty("creditAddress")
+  private String creditAddress;
+
+  @Valid
+  @Schema(example = "0x4279953514f0009c5cb371df4d530f6fee0ede17")
+  @JsonProperty("userAddress")
+  private String userAddress;
+
+  @JsonProperty("paymentStatus")
+  @Schema(hidden = true)
+  private PaymentStatus paymentStatus;
 
   @Valid
   @JsonProperty("customerRequiredInfo")

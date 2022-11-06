@@ -27,6 +27,10 @@ public class UserRequest {
   @Schema(example = "John")
   private String lastName;
 
+  @JsonProperty("companyName")
+  @Schema(example = "Trixie")
+  private String companyName;
+
   @JsonProperty("signerAddress")
   @Schema(example = "0x4279953514f0009c5cb371df4d530f6fee0ede17")
   private String signerAddress;
@@ -44,7 +48,7 @@ public class UserRequest {
   private String phone;
   
   @Valid
-  @JsonProperty("accounts")
-  private List<AccountRequest> accounts;
+  @JsonProperty("wallets")
+  private List<WalletRequest> wallets;
 
 }

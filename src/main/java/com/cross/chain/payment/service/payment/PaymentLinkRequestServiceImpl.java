@@ -1,10 +1,11 @@
 package com.cross.chain.payment.service.payment;
 
 import com.cross.chain.payment.domain.PaymentRequestDetails;
+import com.cross.chain.payment.domain.PaymentStatus;
 import com.cross.chain.payment.mapper.PaymentRequestMapper;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
-import com.cross.chain.payment.dto.PaymentType;
+import com.cross.chain.payment.domain.PaymentType;
 import com.cross.chain.payment.repository.PaymentRequestRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +33,18 @@ public class PaymentLinkRequestServiceImpl implements PaymentRequestService {
     @Override
     public PaymentResponse createPaymentRequest(PaymentRequest paymentRequest) {
         validatePayment(paymentRequest);
-        PaymentRequestDetails paymentRequestDetails = createLink(paymentRequest);
+        PaymentRequestDetails paymentRequestDetails = create(paymentRequest);
         return PaymentResponse.builder()
-                .paymentLink(url.concat("/").concat(paymentRequestDetails.getHash()))
+                .paymentLink(paymentRequestDetails.getPaymentLink())
                 .build();
     }
 
-    private PaymentRequestDetails createLink(PaymentRequest paymentRequest){
+    private PaymentRequestDetails create(PaymentRequest paymentRequest){
         PaymentRequestDetails paymentRequestDetails = mapper.map(paymentRequest);
         paymentRequestDetails.setHash(RandomStringUtils.randomAlphabetic(hashLength));
+        paymentRequestDetails.setPaymentLink(url.concat("/").concat(paymentRequestDetails.getHash()));
         paymentRequestDetails.setCreatedAt(Instant.now());
+        paymentRequestDetails.setPaymentStatus(PaymentStatus.CREATED);
         return repository.save(paymentRequestDetails);
     }
 

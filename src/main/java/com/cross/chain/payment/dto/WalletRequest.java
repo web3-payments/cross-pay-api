@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @Builder
 @Validated
-public class AccountRequest {
+public class WalletRequest {
   
   @JsonProperty("name")
   @Schema(example = "account name")
@@ -21,5 +21,17 @@ public class AccountRequest {
   @JsonProperty("address")
   @Schema(example = "0x4279953514f0009c5cb371df4d530f6fee0ede17")
   private String address;
+
+  @JsonProperty("blockchain")
+  @Schema(example = "Ethereum")
+  private String blockchain;
+
+  @JsonProperty("chainId")
+  @Schema(example = "1")
+  private String chainId;
+
+  @JsonProperty("createdAt")
+  @Schema(example = "1667408529711")
+  private long createdAt;
   
 }

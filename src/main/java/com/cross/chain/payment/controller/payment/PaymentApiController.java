@@ -1,8 +1,9 @@
 package com.cross.chain.payment.controller.payment;
 
+import com.cross.chain.payment.dto.PaymentConfirmation;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
-import com.cross.chain.payment.dto.PaymentType;
+import com.cross.chain.payment.domain.PaymentType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 import static org.springframework.http.MediaType.*;
 
 
@@ -24,7 +27,7 @@ public interface PaymentApiController {
 
     @Operation(summary = "create a payment", tags={ "payments" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentRequest.class))),
+        @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PaymentRequest.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
         @ApiResponse(responseCode = "404", description = "User not found") })
     ResponseEntity<PaymentResponse> createPayment(@Parameter(in = ParameterIn.DEFAULT, description = "Created payment object", schema=@Schema()) @RequestBody PaymentRequest body);
@@ -37,6 +40,21 @@ public interface PaymentApiController {
             @ApiResponse(responseCode = "404", description = "User not found") })
     ResponseEntity<PaymentRequest> paymentByHash(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash);
 
+    @Operation(summary = "Payment confirmation", description = "", tags={ "payments" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PaymentRequest.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
+            @ApiResponse(responseCode = "404", description = "User not found") })
+    ResponseEntity paymentConfirmation(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash,
+                                                       @Parameter(in = ParameterIn.DEFAULT, description = "Created payment object", schema=@Schema()) @RequestBody PaymentConfirmation body);
+
+    @Operation(summary = "Payment cancellation", description = "", tags={ "payments" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PaymentRequest.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
+            @ApiResponse(responseCode = "404", description = "User not found") })
+    ResponseEntity paymentCancellation(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash);
+
     @Operation(summary = "get all payments with filter", description = "(INTERNAL USAGE ONLY)", tags={ "payments" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PaymentRequest.class))),
@@ -45,12 +63,12 @@ public interface PaymentApiController {
     ResponseEntity<PaymentRequest> getAllPayment(@Parameter(in = ParameterIn.QUERY, description = "accountId that belongs the payments" ,schema=@Schema())@RequestParam(value = "accountId", required = false) String accountId, @Parameter(in = ParameterIn.QUERY, description = "Payment type that need to be considered for filter" ,schema=@Schema()) PaymentType paymentType);
 
 
-    @Operation(summary = "get a payment by accountId", tags={ "payments" })
+    @Operation(summary = "get a payment by User Address", tags={ "payments" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentRequest.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
         @ApiResponse(responseCode = "404", description = "User not found") })
-    ResponseEntity<PaymentRequest> getAllPaymentGivenAccountAndFilters(@Parameter(in = ParameterIn.QUERY, description = "accountId that belongs the payments" ,required=true,schema=@Schema()) String accountId, @Parameter(in = ParameterIn.QUERY, description = "Payment type that need to be considered for filter" ,schema=@Schema()) PaymentType paymentType);
+    ResponseEntity<List<PaymentRequest>> getAllPaymentGivenUserAddressAndFilters(@Parameter(in = ParameterIn.QUERY, description = "User address that owns the payments" ,required=true,schema=@Schema()) String accountId, @Parameter(in = ParameterIn.QUERY, description = "Payment type that need to be considered for filter" ,schema=@Schema()) PaymentType paymentType);
 
 }
 

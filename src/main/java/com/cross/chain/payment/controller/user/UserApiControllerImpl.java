@@ -1,5 +1,6 @@
 package com.cross.chain.payment.controller.user;
 
+import com.cross.chain.payment.dto.WalletRequest;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import com.cross.chain.payment.dto.UserRequest;
 import com.cross.chain.payment.service.user.UserService;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -36,6 +39,12 @@ public class UserApiControllerImpl implements UserApiController {
     @GetMapping(value = USER_ADDRESS, produces = {APPLICATION_JSON_VALUE} )
     public ResponseEntity<UserRequest> retrieveUser(@PathVariable(value = "address") String address) throws UserNotFoundException {
         return ResponseEntity.ok(userService.retrieveUser(address));
+    }
+
+    @Override
+    @GetMapping(value = USER_WALLETS, produces = {APPLICATION_JSON_VALUE} )
+    public ResponseEntity<List<WalletRequest>> retrieveUserWallets(String address) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.retrieveUserWallets(address));
     }
 
 }

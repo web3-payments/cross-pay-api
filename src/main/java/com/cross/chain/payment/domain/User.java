@@ -17,6 +17,8 @@ public class User {
 
     private String lastName;
 
+    private String companyName;
+
     private String signerAddress;
 
     private String signature;
@@ -25,6 +27,6 @@ public class User {
 
     private String phone;
 
-    private List<Account> accounts;
+    private List<Wallet> wallets;
 
 }
