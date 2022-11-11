@@ -25,6 +25,12 @@ import static org.springframework.http.MediaType.*;
 @Tag(name = "payments", description = "Payment Operations")
 public interface PaymentApiController {
 
+    String PAYMENT = "/payment";
+    String PAYMENT_PAYMENT_HASH_CONFIRMATION = "/payment/{paymentHash}/confirmation";
+    String PAYMENT_PAYMENT_HASH_CANCELLATION = "/payment/{paymentHash}/cancellation";
+    String PAYMENT_FIND_BY_USER_ADDRESS = "/payment/findByUserAddress";
+    String PAYMENT_PAYMENT_HASH = "/payment/{paymentHash}";
+
     @Operation(summary = "create a payment", tags={ "payments" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PaymentRequest.class))),

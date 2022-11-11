@@ -43,7 +43,6 @@ public class PaymentLinkRequestServiceImpl implements PaymentRequestService {
         PaymentRequestDetails paymentRequestDetails = mapper.map(paymentRequest);
         paymentRequestDetails.setHash(RandomStringUtils.randomAlphabetic(hashLength));
         paymentRequestDetails.setPaymentLink(url.concat("/").concat(paymentRequestDetails.getHash()));
-        paymentRequestDetails.setCreatedAt(Instant.now());
         paymentRequestDetails.setPaymentStatus(PaymentStatus.CREATED);
         return repository.save(paymentRequestDetails);
     }

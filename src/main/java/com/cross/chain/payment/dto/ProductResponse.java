@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 @Validated
 public class ProductResponse {
 
-  @Schema(example = "507f191e810c19729de860ea")
+  @Schema(example = "635705c4adf6f47e26730019")
   @JsonProperty("id")
   private String id;
 
@@ -30,7 +30,7 @@ public class ProductResponse {
   private String name;
 
   @Valid
-  @Schema(example = "55.34", description = "")
+  @Schema(example = "55.34")
   @JsonProperty("price")
   private BigDecimal price;
 
@@ -38,9 +38,17 @@ public class ProductResponse {
   @JsonProperty("description")
   private String description;
 
+  @Schema(example = "10")
+  @JsonProperty("totalSupply")
+  private int totalSupply;
+
+  @Schema(example = "ETH")
+  @JsonProperty("token")
+  private String token;
+
   @Valid
   @JsonProperty("image")
-  private String image;
+  private byte[] image;
 
   @Schema(example = "10-10-2022 22:00:00")
   @JsonProperty("createdAt")

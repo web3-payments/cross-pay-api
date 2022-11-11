@@ -26,7 +26,7 @@ public class ProductRequest {
   private String name;
 
   @Valid
-  @Schema(example = "55.34", description = "")
+  @Schema(example = "55.34")
   @JsonProperty("price")
   private BigDecimal price;
 
@@ -34,16 +34,12 @@ public class ProductRequest {
   @JsonProperty("description")
   private String description;
 
-  @Valid
-  @JsonProperty("image")
-  private String image;
+  @Schema(example = "10")
+  @JsonProperty("totalSupply")
+  private int totalSupply;
 
-  @Schema(example = "10-10-2022 22:00:00")
-  @JsonProperty("createdAt")
-  private String createdAt;
-
-  @Schema(example = "11-10-2022 22:00:00")
-  @JsonProperty("updatedAt")
-  private String updatedAt;
+  @Schema(example = "ETH")
+  @JsonProperty("token")
+  private String token;
 
 }
