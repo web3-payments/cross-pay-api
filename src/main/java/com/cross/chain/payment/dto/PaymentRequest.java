@@ -77,7 +77,7 @@ public class PaymentRequest   {
 
   @Valid
   @JsonProperty("products")
-  private List<ProductResponse> products;
+  private List<ProductPaymentRequest> products;
 
   @Valid
   @Schema(example = "0x4279953514f0009c5cb371df4d530f6fee0ede17")

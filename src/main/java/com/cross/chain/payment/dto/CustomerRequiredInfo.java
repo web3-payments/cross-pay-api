@@ -16,18 +16,18 @@ public class CustomerRequiredInfo   {
 
   @Schema(example = "true")
   @JsonProperty("name")
-  private Boolean name;
+  private boolean name;
 
   @Schema(example = "true")
   @JsonProperty("email")
-  private Boolean email;
+  private boolean email;
 
   @Schema(example = "true")
-  @JsonProperty("number")
-  private Boolean number;
+  @JsonProperty("phoneNumber")
+  private boolean phoneNumber;
 
   @Schema(example = "true")
   @JsonProperty("shippingAddress")
-  private Boolean shippingAddress;
+  private boolean shippingAddress;
 
 }

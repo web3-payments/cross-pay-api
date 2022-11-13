@@ -2,18 +2,20 @@ package com.cross.chain.payment.service.payment;
 
 import com.cross.chain.payment.domain.PaymentRequestDetails;
 import com.cross.chain.payment.domain.PaymentStatus;
+import com.cross.chain.payment.domain.ProductsPayment;
 import com.cross.chain.payment.mapper.PaymentRequestMapper;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.domain.PaymentType;
 import com.cross.chain.payment.repository.PaymentRequestRepository;
+import com.cross.chain.payment.service.product.ProductService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.time.Instant;
+import java.util.List;
 
 @Service
 public class PaymentLinkRequestServiceImpl implements PaymentRequestService {
@@ -30,6 +32,9 @@ public class PaymentLinkRequestServiceImpl implements PaymentRequestService {
     @Autowired
     private PaymentRequestRepository repository;
 
+    @Autowired
+    private ProductService productService;
+
     @Override
     public PaymentResponse createPaymentRequest(PaymentRequest paymentRequest) {
         validatePayment(paymentRequest);
@@ -41,10 +46,15 @@ public class PaymentLinkRequestServiceImpl implements PaymentRequestService {
 
     private PaymentRequestDetails create(PaymentRequest paymentRequest){
         PaymentRequestDetails paymentRequestDetails = mapper.map(paymentRequest);
+        updateProductDetails(paymentRequestDetails.getProducts());
         paymentRequestDetails.setHash(RandomStringUtils.randomAlphabetic(hashLength));
         paymentRequestDetails.setPaymentLink(url.concat("/").concat(paymentRequestDetails.getHash()));
         paymentRequestDetails.setPaymentStatus(PaymentStatus.CREATED);
         return repository.save(paymentRequestDetails);
+    }
+
+    private void updateProductDetails(List<ProductsPayment> products) {
+        products.forEach(item-> productService.update(item.getProduct()));
     }
 
     @Override

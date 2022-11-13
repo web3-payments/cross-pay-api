@@ -1,5 +1,7 @@
 package com.cross.chain.payment.service.product;
 
+import com.cross.chain.payment.domain.Product;
+import com.cross.chain.payment.domain.ProductsPayment;
 import com.cross.chain.payment.dto.ProductRequest;
 import com.cross.chain.payment.dto.ProductResponse;
 import com.cross.chain.payment.exception.UserNotFoundException;
@@ -16,4 +18,5 @@ public interface ProductService {
 
     List<ProductResponse> getAllByUserAddress(String userAddress) throws UserNotFoundException;
 
+    void update(Product product);
 }

@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Document(collection = "payment-request")
@@ -27,6 +28,7 @@ public class PaymentRequestDetails {
     private CurrencySupported currency;
     private PaymentType paymentType;
     private PaymentStatus paymentStatus;
+    private List<ProductsPayment> products;
     private String title;
 
 }

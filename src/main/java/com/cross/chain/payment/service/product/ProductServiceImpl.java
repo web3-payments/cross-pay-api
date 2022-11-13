@@ -61,4 +61,9 @@ public class ProductServiceImpl implements ProductService {
                 .map(mapper::map)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void update(Product product) {
+        productRepository.save(product);
+    }
 }

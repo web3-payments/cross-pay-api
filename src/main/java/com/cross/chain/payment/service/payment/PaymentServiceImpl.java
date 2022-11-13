@@ -62,6 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
         if(paymentRequestDetails.getPaymentStatus().isFinalStatus()){
             throw new RuntimeException();
         }
+        //TODO: increate the total supply since the payment was cancelled.
         paymentRequestDetails.setPaymentStatus(PaymentStatus.CANCELLED);
         repository.save(paymentRequestDetails);
     }
