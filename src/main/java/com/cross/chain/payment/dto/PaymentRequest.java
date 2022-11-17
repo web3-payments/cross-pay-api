@@ -80,6 +80,10 @@ public class PaymentRequest   {
   private List<ProductPaymentRequest> products;
 
   @Valid
+  @JsonProperty("adjustableQuantity")
+  private boolean adjustableQuantity;
+
+  @Valid
   @Schema(example = "0x4279953514f0009c5cb371df4d530f6fee0ede17")
   @JsonProperty("creditAddress")
   private String creditAddress;
@@ -96,6 +100,10 @@ public class PaymentRequest   {
   @Valid
   @JsonProperty("customerRequiredInfo")
   private CustomerRequiredInfo customerRequiredInfo;
+
+  @Valid
+  @JsonProperty("customerInfo")
+  private CustomerInfoDto customerInfo;
 
   @JsonProperty("paymentLink")
   @Schema(example = "https://buy.crosspay.com/test_28oaGzarrdlx6Pe288", description = "Required if paymentType is PaymentLink")

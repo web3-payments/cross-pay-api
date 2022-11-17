@@ -4,6 +4,7 @@ import com.cross.chain.payment.dto.PaymentConfirmation;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.domain.PaymentType;
+import com.cross.chain.payment.exception.PaymentRequestNotFound;
 import com.cross.chain.payment.service.payment.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +33,27 @@ public class PaymentApiControllerImpl implements PaymentApiController {
     }
 
     @Override
-    @GetMapping(value = PAYMENT_PAYMENT_HASH, produces = { APPLICATION_JSON_VALUE })
-    public ResponseEntity<PaymentRequest> paymentByHash(@PathVariable("paymentHash") String paymentHash) {
+    @GetMapping(value = PAYMENT_HASH, produces = { APPLICATION_JSON_VALUE })
+    public ResponseEntity<PaymentRequest> paymentByHash(@PathVariable("paymentHash") String paymentHash) throws PaymentRequestNotFound {
         return ResponseEntity.ok(paymentService.retrievePaymentRequest(paymentHash));
     }
 
     @Override
-    @PostMapping(value = PAYMENT_PAYMENT_HASH_CONFIRMATION, consumes = { APPLICATION_JSON_VALUE })
-    public ResponseEntity paymentConfirmation(@PathVariable("paymentHash") String paymentHash, @Valid @RequestBody PaymentConfirmation body) {
+    @PatchMapping(value = PAYMENT_HASH, produces = { APPLICATION_JSON_VALUE })
+    public ResponseEntity<PaymentRequest> updatePaymentByHash(@PathVariable("paymentHash") String paymentHash, @Valid @RequestBody PaymentRequest body) throws PaymentRequestNotFound {
+        return ResponseEntity.ok(paymentService.updatePaymentRequest(paymentHash, body));
+    }
+
+    @Override
+    @PostMapping(value = PAYMENT_HASH_CONFIRMATION, consumes = { APPLICATION_JSON_VALUE })
+    public ResponseEntity paymentConfirmation(@PathVariable("paymentHash") String paymentHash, @Valid @RequestBody PaymentConfirmation body) throws PaymentRequestNotFound {
         paymentService.paymentConfirmation(paymentHash, body);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping(value = PAYMENT_PAYMENT_HASH_CANCELLATION)
-    public ResponseEntity paymentCancellation(@PathVariable("paymentHash") String paymentHash) {
+    @PostMapping(value = PAYMENT_HASH_CANCELLATION)
+    public ResponseEntity paymentCancellation(@PathVariable("paymentHash") String paymentHash) throws PaymentRequestNotFound {
         paymentService.paymentCancellation(paymentHash);
         return ResponseEntity.noContent().build();
     }

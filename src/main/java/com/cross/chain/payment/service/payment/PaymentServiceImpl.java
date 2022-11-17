@@ -2,11 +2,14 @@ package com.cross.chain.payment.service.payment;
 
 import com.cross.chain.payment.domain.PaymentRequestDetails;
 import com.cross.chain.payment.domain.PaymentStatus;
+import com.cross.chain.payment.domain.ProductsPayment;
 import com.cross.chain.payment.dto.PaymentConfirmation;
+import com.cross.chain.payment.exception.PaymentRequestNotFound;
 import com.cross.chain.payment.mapper.PaymentRequestMapper;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.repository.PaymentRequestRepository;
+import com.cross.chain.payment.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     List<PaymentRequestService> paymentRequestServices;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private PaymentRequestMapper mapper;
@@ -35,9 +41,25 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentRequest retrievePaymentRequest(String paymentHash) {
-        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(RuntimeException::new);//TODO: change exception
+    public PaymentRequest retrievePaymentRequest(String paymentHash) throws PaymentRequestNotFound {
+        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
         return mapper.map(paymentRequestDetails);
+    }
+
+    @Override
+    public PaymentRequest updatePaymentRequest(String paymentHash, PaymentRequest paymentRequest) throws PaymentRequestNotFound {
+        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
+        PaymentRequestDetails paymentUpdated = mapper.map(paymentRequest);
+        paymentRequestDetails.setCustomerInfo(paymentUpdated.getCustomerInfo());
+        paymentRequestDetails.setAmount(paymentUpdated.getAmount());
+        paymentRequestDetails.setProducts(paymentUpdated.getProducts());
+        updateProductDetails(paymentRequestDetails.getProducts());//TODO: check if I remove it from here mongodb will automatically handle the update of the product
+        repository.save(paymentRequestDetails);
+        return mapper.map(paymentRequestDetails);
+    }
+
+    private void updateProductDetails(List<ProductsPayment> products) {
+        products.forEach(item-> productService.update(item.getProduct()));
     }
 
     @Override
@@ -48,16 +70,16 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void paymentConfirmation(String paymentHash, PaymentConfirmation paymentConfirmation) {
-        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(RuntimeException::new); //TODO: change exception
+    public void paymentConfirmation(String paymentHash, PaymentConfirmation paymentConfirmation) throws PaymentRequestNotFound {
+        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
         //TODO: create a transaction history using the paymentConfirmation
         paymentRequestDetails.setPaymentStatus(PaymentStatus.PAID);
         repository.save(paymentRequestDetails);
     }
 
     @Override
-    public void paymentCancellation(String paymentHash) {
-        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(RuntimeException::new); //TODO: change exception
+    public void paymentCancellation(String paymentHash) throws PaymentRequestNotFound {
+        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new); //TODO: change exception
         //TODO: create a transaction history using the paymentConfirmation
         if(paymentRequestDetails.getPaymentStatus().isFinalStatus()){
             throw new RuntimeException();

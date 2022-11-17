@@ -7,16 +7,12 @@ import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * CustomerResponse
+ * CustomerInfo
  */
 @Data
 @Builder
 @Validated
-public class CustomerResponse   {
-
-  @Schema(example = "507f191e810c19729de860ea")
-  @JsonProperty("id")
-  private String id;
+public class CustomerInfoDto {
 
   @Schema(example = "Customer Name")
   @JsonProperty("name")
@@ -25,5 +21,12 @@ public class CustomerResponse   {
   @Schema(example = "john@email.com")
   @JsonProperty("email")
   private String email;
+
+  @Schema(example = "john@email.com")
+  @JsonProperty("phoneNumber")
+  private String phoneNumber;
+
+  @JsonProperty("shippingAddress")
+  private ShippingAddress shippingAddress;
 
 }
