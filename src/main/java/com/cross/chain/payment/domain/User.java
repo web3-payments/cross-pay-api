@@ -1,6 +1,7 @@
 package com.cross.chain.payment.domain;
 
 import lombok.Data;
+import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -23,6 +24,7 @@ public class User {
     private String signature;
     private String email;
     private String phone;
+    private Binary image;
     private List<Wallet> wallets = new ArrayList<>();
     @DBRef
     private List<Product> products = new ArrayList<>();

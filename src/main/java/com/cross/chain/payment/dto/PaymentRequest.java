@@ -93,6 +93,9 @@ public class PaymentRequest   {
   @JsonProperty("userAddress")
   private String userAddress;
 
+  @JsonProperty("user") //TODO: review what information should be returned in here, cause is used on the paymentlink
+  private UserRequest user;
+
   @JsonProperty("paymentStatus")
   @Schema(hidden = true)
   private PaymentStatus paymentStatus;

@@ -46,6 +46,9 @@ public class UserRequest {
   @JsonProperty("phone")
   @Schema(example = "911255254")
   private String phone;
+
+  @JsonProperty("image")
+  private byte[] image;
   
   @Valid
   @JsonProperty("wallets")

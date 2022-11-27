@@ -14,12 +14,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @Tag(name = "user", description = "User Operations")
 public interface UserApiController {
@@ -39,6 +42,14 @@ public interface UserApiController {
             @ApiResponse(responseCode = "200", description = "successful operation") })
     ResponseEntity<UserRequest> updateUser(@Parameter(in = ParameterIn.PATH, description = "username that need to be updated", required=true, schema=@Schema()) @PathVariable("address") String address,
                                     @Parameter(in = ParameterIn.DEFAULT, description = "Update an existent user", schema=@Schema()) @Valid @RequestBody UserRequest body) throws UserNotFoundException;
+
+    @Operation(summary = "Upload a image to a given user", tags={ "user" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = MULTIPART_FORM_DATA_VALUE)),
+            @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
+            @ApiResponse(responseCode = "404", description = "User not found") })
+    ResponseEntity uploadImage(@Parameter(in = ParameterIn.PATH, description = "address that identify the user" ,schema=@Schema())@PathVariable(value = "address") String address,
+                                          @RequestPart("image") MultipartFile file) throws UserNotFoundException, IOException;
 
     @Operation(summary = "get all user by address", tags={ "user" })
     @ApiResponses(value = {

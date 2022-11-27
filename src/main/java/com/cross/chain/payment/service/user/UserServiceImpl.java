@@ -6,9 +6,13 @@ import com.cross.chain.payment.dto.WalletRequest;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import com.cross.chain.payment.mapper.UserMapper;
 import com.cross.chain.payment.repository.UserRepository;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,10 +43,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRequest update(UserRequest userRequest) throws UserNotFoundException {
-        User user = mapper.map(userRequest);
-        user.setId(repository.findBySignerAddress(userRequest.getSignerAddress())
-                .map(User::getId)
-                .orElseThrow(UserNotFoundException::new));
+        User userFound = repository.findBySignerAddress(userRequest.getSignerAddress()).orElseThrow(UserNotFoundException::new);
+        userFound.setCompanyName(userRequest.getCompanyName());
+        userFound.setFirstName(userRequest.getFirstName());
+        userFound.setLastName(userRequest.getLastName());
+        userFound.setEmail(userRequest.getEmail());
+        userFound.setPhone(userRequest.getPhone());
+        return mapper.map(repository.save(userFound));
+    }
+
+    @Override
+    public UserRequest uploadImage(String address, MultipartFile file) throws IOException, UserNotFoundException {
+        Binary image = new Binary(BsonBinarySubType.BINARY, file.getBytes());
+        User user = repository.findBySignerAddress(address).orElseThrow(UserNotFoundException::new);
+        user.setImage(image);
         return mapper.map(repository.save(user));
     }
 

@@ -28,6 +28,8 @@ public class PaymentRequestDetails {
     private Instant createdAt;
     private BigDecimal amount;
     @DBRef
+    private User user;
+    @DBRef
     private Cryptocurrency cryptocurrency;
     private PaymentType paymentType;
     private PaymentStatus paymentStatus;
