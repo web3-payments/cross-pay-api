@@ -4,6 +4,7 @@ import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.dto.ProductRequest;
 import com.cross.chain.payment.dto.ProductResponse;
+import com.cross.chain.payment.exception.CryptocurrencyNotFoundException;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import com.cross.chain.payment.service.product.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class ProductApiControllerImpl implements ProductApiController {
 
     @Override
     @PostMapping(value = PRODUCT, produces = {APPLICATION_JSON_VALUE}, consumes = {MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity createProductWithImage(@PathVariable(value = "address") String address, @RequestPart("image") MultipartFile file, ProductRequest productRequest) throws UserNotFoundException, IOException {
+    public ResponseEntity createProductWithImage(@PathVariable(value = "address") String address, @RequestPart("image") MultipartFile file, ProductRequest productRequest) throws UserNotFoundException, IOException, CryptocurrencyNotFoundException {
         service.create(address, productRequest, file);
         return ResponseEntity.ok().build();
     }

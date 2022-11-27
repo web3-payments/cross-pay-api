@@ -43,8 +43,8 @@ public class ProductResponse {
   private int totalSupply;
 
   @Schema(example = "ETH")
-  @JsonProperty("token")
-  private String token;
+  @JsonProperty("cryptocurrency")
+  private CryptocurrencyDto cryptocurrency;
 
   @Valid
   @JsonProperty("image")

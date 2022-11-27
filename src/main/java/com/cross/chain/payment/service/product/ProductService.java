@@ -4,6 +4,7 @@ import com.cross.chain.payment.domain.Product;
 import com.cross.chain.payment.domain.ProductsPayment;
 import com.cross.chain.payment.dto.ProductRequest;
 import com.cross.chain.payment.dto.ProductResponse;
+import com.cross.chain.payment.exception.CryptocurrencyNotFoundException;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    ProductResponse create(String userAddress, ProductRequest productRequest, MultipartFile file) throws IOException, UserNotFoundException;
+    ProductResponse create(String userAddress, ProductRequest productRequest, MultipartFile file) throws IOException, UserNotFoundException, CryptocurrencyNotFoundException;
 
     ProductResponse create(String userAddress, ProductRequest productRequest) throws UserNotFoundException;
 

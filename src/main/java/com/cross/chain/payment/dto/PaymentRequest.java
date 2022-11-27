@@ -54,8 +54,8 @@ public class PaymentRequest   {
   private BigDecimal amount;
 
   @Valid
-  @JsonProperty("currency")
-  private CurrencySupported currency;
+  @JsonProperty("cryptocurrency")
+  private CryptocurrencyDto cryptocurrency;
 
   @Schema(example = "false", description = "If true minAmount must be filled")
   @JsonProperty("minPayment")

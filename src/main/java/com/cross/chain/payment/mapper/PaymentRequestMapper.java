@@ -1,8 +1,6 @@
 package com.cross.chain.payment.mapper;
 
-import com.cross.chain.payment.domain.CustomerInfo;
 import com.cross.chain.payment.domain.PaymentRequestDetails;
-import com.cross.chain.payment.dto.CustomerInfoDto;
 import com.cross.chain.payment.dto.PaymentRequest;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;

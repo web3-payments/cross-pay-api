@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -26,7 +27,8 @@ public class PaymentRequestDetails {
     @CreatedDate
     private Instant createdAt;
     private BigDecimal amount;
-    private CurrencySupported currency;
+    @DBRef
+    private Cryptocurrency cryptocurrency;
     private PaymentType paymentType;
     private PaymentStatus paymentStatus;
     private List<ProductsPayment> products;

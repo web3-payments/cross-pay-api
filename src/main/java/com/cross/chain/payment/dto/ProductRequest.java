@@ -39,7 +39,10 @@ public class ProductRequest {
   private int totalSupply;
 
   @Schema(example = "ETH")
-  @JsonProperty("token")
-  private String token;
+  @JsonProperty("cryptocurrency")
+  private CryptocurrencyDto cryptocurrency;
+
+  @JsonProperty("cryptocurrencyId")
+  private String cryptocurrencyId;
 
 }
