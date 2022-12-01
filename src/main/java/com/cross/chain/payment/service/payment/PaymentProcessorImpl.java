@@ -4,6 +4,7 @@ import com.cross.chain.payment.domain.PaymentRequestDetails;
 import com.cross.chain.payment.domain.PaymentStatus;
 import com.cross.chain.payment.domain.ProductsPayment;
 import com.cross.chain.payment.dto.PaymentConfirmation;
+import com.cross.chain.payment.exception.PaymentProcessorException;
 import com.cross.chain.payment.exception.PaymentRequestNotFound;
 import com.cross.chain.payment.mapper.PaymentRequestMapper;
 import com.cross.chain.payment.dto.PaymentRequest;
@@ -17,10 +18,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PaymentServiceImpl implements PaymentService {
+public class PaymentProcessorImpl implements PaymentProcessor {
 
     @Autowired
-    List<PaymentRequestService> paymentRequestServices;
+    List<PaymentService> paymentServices;
 
     @Autowired
     private ProductService productService;
@@ -33,11 +34,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse processPaymentRequest(PaymentRequest paymentRequest) {
-        PaymentRequestService paymentRequestService = paymentRequestServices.stream()
+        PaymentService paymentService = paymentServices.stream()
                 .filter(p -> p.applies(paymentRequest.getPaymentType()))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);//TODO: change exception
-        return paymentRequestService.createPaymentRequest(paymentRequest);
+                .orElseThrow(PaymentProcessorException::new);
+        return paymentService.create(paymentRequest);
     }
 
     @Override
@@ -72,20 +73,20 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void paymentConfirmation(String paymentHash, PaymentConfirmation paymentConfirmation) throws PaymentRequestNotFound {
         PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
-        //TODO: create a transaction history using the paymentConfirmation
-        paymentRequestDetails.setPaymentStatus(PaymentStatus.PAID);
-        repository.save(paymentRequestDetails);
+        PaymentService paymentService = paymentServices.stream()
+                .filter(p -> p.applies(paymentRequestDetails.getPaymentType()))
+                .findFirst()
+                .orElseThrow(PaymentProcessorException::new);
+        paymentService.confirm(paymentRequestDetails);
     }
 
     @Override
     public void paymentCancellation(String paymentHash) throws PaymentRequestNotFound {
-        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new); //TODO: change exception
-        //TODO: create a transaction history using the paymentConfirmation
-        if(paymentRequestDetails.getPaymentStatus().isFinalStatus()){
-            throw new RuntimeException();
-        }
-        //TODO: increate the total supply since the payment was cancelled.
-        paymentRequestDetails.setPaymentStatus(PaymentStatus.CANCELLED);
-        repository.save(paymentRequestDetails);
+        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
+        PaymentService paymentService = paymentServices.stream()
+                .filter(p -> p.applies(paymentRequestDetails.getPaymentType()))
+                .findFirst()
+                .orElseThrow(PaymentProcessorException::new);
+        paymentService.cancel(paymentRequestDetails);
     }
 }

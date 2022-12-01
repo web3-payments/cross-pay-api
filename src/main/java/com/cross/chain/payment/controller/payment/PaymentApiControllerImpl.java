@@ -5,7 +5,7 @@ import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.domain.PaymentType;
 import com.cross.chain.payment.exception.PaymentRequestNotFound;
-import com.cross.chain.payment.service.payment.PaymentService;
+import com.cross.chain.payment.service.payment.PaymentProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,36 +25,36 @@ import static org.springframework.http.MediaType.*;
 public class PaymentApiControllerImpl implements PaymentApiController {
 
     @Autowired
-    private PaymentService paymentService;
+    private PaymentProcessor paymentProcessor;
     @Override
     @PostMapping(value = PAYMENT, produces = { APPLICATION_JSON_VALUE }, consumes = { APPLICATION_JSON_VALUE })
     public ResponseEntity<PaymentResponse> createPayment(@Valid @RequestBody PaymentRequest body) {
-        return ResponseEntity.ok(paymentService.processPaymentRequest(body));
+        return ResponseEntity.ok(paymentProcessor.processPaymentRequest(body));
     }
 
     @Override
     @GetMapping(value = PAYMENT_HASH, produces = { APPLICATION_JSON_VALUE })
     public ResponseEntity<PaymentRequest> paymentByHash(@PathVariable("paymentHash") String paymentHash) throws PaymentRequestNotFound {
-        return ResponseEntity.ok(paymentService.retrievePaymentRequest(paymentHash));
+        return ResponseEntity.ok(paymentProcessor.retrievePaymentRequest(paymentHash));
     }
 
     @Override
     @PatchMapping(value = PAYMENT_HASH, produces = { APPLICATION_JSON_VALUE })
     public ResponseEntity<PaymentRequest> updatePaymentByHash(@PathVariable("paymentHash") String paymentHash, @Valid @RequestBody PaymentRequest body) throws PaymentRequestNotFound {
-        return ResponseEntity.ok(paymentService.updatePaymentRequest(paymentHash, body));
+        return ResponseEntity.ok(paymentProcessor.updatePaymentRequest(paymentHash, body));
     }
 
     @Override
     @PostMapping(value = PAYMENT_HASH_CONFIRMATION, consumes = { APPLICATION_JSON_VALUE })
     public ResponseEntity paymentConfirmation(@PathVariable("paymentHash") String paymentHash, @Valid @RequestBody PaymentConfirmation body) throws PaymentRequestNotFound {
-        paymentService.paymentConfirmation(paymentHash, body);
+        paymentProcessor.paymentConfirmation(paymentHash, body);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @PostMapping(value = PAYMENT_HASH_CANCELLATION)
     public ResponseEntity paymentCancellation(@PathVariable("paymentHash") String paymentHash) throws PaymentRequestNotFound {
-        paymentService.paymentCancellation(paymentHash);
+        paymentProcessor.paymentCancellation(paymentHash);
         return ResponseEntity.noContent().build();
     }
 
@@ -66,7 +66,7 @@ public class PaymentApiControllerImpl implements PaymentApiController {
     @Override
     @RequestMapping(value = PAYMENT_FIND_BY_USER_ADDRESS, produces = { "application/json" }, method = RequestMethod.GET)
     public ResponseEntity<List<PaymentRequest>> getAllPaymentGivenUserAddressAndFilters(@NotNull @Valid @RequestParam(value = "address") String address, @Valid @RequestParam(value = "paymentType", required = false) PaymentType paymentType) {
-        return ResponseEntity.ok(paymentService.retrieveByUserAddress(address));
+        return ResponseEntity.ok(paymentProcessor.retrieveByUserAddress(address));
     }
 
 }

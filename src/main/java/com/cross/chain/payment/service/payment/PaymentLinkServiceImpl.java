@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 @Service
-public class PaymentLinkRequestServiceImpl implements PaymentRequestService {
+public class PaymentLinkServiceImpl implements PaymentService {
 
     @Value("${payment.hash-length}")
     private int hashLength;
@@ -38,11 +38,11 @@ public class PaymentLinkRequestServiceImpl implements PaymentRequestService {
     private ProductService productService;
 
     @Override
-    public PaymentResponse createPaymentRequest(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
         validatePayment(paymentRequest);
         PaymentRequestDetails paymentRequestDetails = null;
         try {
-            paymentRequestDetails = create(paymentRequest);
+            paymentRequestDetails = createLink(paymentRequest);
         } catch (UserNotFoundException e) {
             throw new RuntimeException(e); //TODO: Create a paymentLinkCreation Exception
         }
@@ -51,14 +51,33 @@ public class PaymentLinkRequestServiceImpl implements PaymentRequestService {
                 .build();
     }
 
-    private PaymentRequestDetails create(PaymentRequest paymentRequest) throws UserNotFoundException {
+    @Override
+    public PaymentRequestDetails confirm(PaymentRequestDetails paymentRequest) {
+        //TODO: create a transaction history using the paymentConfirmation - PAYM-42
+        //paymentRequestDetails.setPaymentStatus(PaymentStatus.PAID);
+        //repository.save(paymentRequestDetails);
+        return null;
+    }
+
+    @Override
+    public PaymentRequestDetails cancel(PaymentRequestDetails paymentRequest) {
+        //TODO: create a transaction history using the paymentConfirmation
+        if(paymentRequest.getPaymentStatus().isFinalStatus()){
+            throw new RuntimeException(); //TODO: change exception
+        }
+        //TODO: increate the total supply since the payment was cancelled.
+        paymentRequest.setPaymentStatus(PaymentStatus.DEACTIVATED);
+        return repository.save(paymentRequest);
+    }
+
+    private PaymentRequestDetails createLink(PaymentRequest paymentRequest) throws UserNotFoundException {
         PaymentRequestDetails paymentRequestDetails = mapper.map(paymentRequest);
         updateProductDetails(paymentRequestDetails.getProducts());
         User user = userRepository.findBySignerAddress(paymentRequest.getUserAddress()).orElseThrow(UserNotFoundException::new);
         paymentRequestDetails.setUser(user);
         paymentRequestDetails.setHash(RandomStringUtils.randomAlphabetic(hashLength));
         paymentRequestDetails.setPaymentLink(url.concat("/").concat(paymentRequestDetails.getHash()));
-        paymentRequestDetails.setPaymentStatus(PaymentStatus.CREATED);
+        paymentRequestDetails.setPaymentStatus(PaymentStatus.ACTIVATED);
         return repository.save(paymentRequestDetails);
     }
 

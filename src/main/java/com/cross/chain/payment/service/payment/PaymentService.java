@@ -1,24 +1,22 @@
 package com.cross.chain.payment.service.payment;
 
-import com.cross.chain.payment.dto.PaymentConfirmation;
+import com.cross.chain.payment.domain.PaymentRequestDetails;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
-import com.cross.chain.payment.exception.PaymentRequestNotFound;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
+import com.cross.chain.payment.domain.PaymentType;
 
 public interface PaymentService {
 
-    PaymentResponse processPaymentRequest(PaymentRequest paymentRequest);
+    PaymentResponse create(PaymentRequest paymentRequest);
 
-    PaymentRequest retrievePaymentRequest(String paymentHash) throws PaymentRequestNotFound;
+    PaymentRequestDetails confirm(PaymentRequestDetails paymentRequest);
 
-    PaymentRequest updatePaymentRequest(String paymentHash, PaymentRequest paymentRequest) throws PaymentRequestNotFound;
+    PaymentRequestDetails cancel(PaymentRequestDetails paymentRequest);
 
-    List<PaymentRequest> retrieveByUserAddress(String address);
+    void validatePayment(PaymentRequest paymentRequest);
+    default boolean applies(PaymentType type){
+        return typePayment().equals(type);
+    }
+    PaymentType typePayment();
 
-    void paymentConfirmation(String paymentHash, PaymentConfirmation paymentConfirmation) throws PaymentRequestNotFound;
-
-    void paymentCancellation(String paymentHash) throws PaymentRequestNotFound;
 }

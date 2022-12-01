@@ -1,14 +1,16 @@
 package com.cross.chain.payment.domain;
 
-import com.cross.chain.payment.dto.PaymentRequest;
-
 import java.util.Arrays;
 
 public enum PaymentStatus {
 
     CREATED("CREATED"),
     PAID("PAID"),
-    CANCELLED("CANCELLED");
+    CANCELLED("CANCELLED"),
+
+    ACTIVATED("ACTIVATED"),
+
+    DEACTIVATED("DEACTIVATED");
 
     private String value;
 
@@ -17,7 +19,7 @@ public enum PaymentStatus {
     }
 
     public boolean isFinalStatus(){
-        return Arrays.asList(PAID, CANCELLED).contains(valueOf(value));
+        return Arrays.asList(PAID, CANCELLED, DEACTIVATED).contains(valueOf(value));
     }
 
 }
