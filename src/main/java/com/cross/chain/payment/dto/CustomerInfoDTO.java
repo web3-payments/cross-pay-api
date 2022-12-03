@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @Builder
 @Validated
-public class CustomerInfoDto {
+public class CustomerInfoDTO {
 
   @Schema(example = "Customer Name")
   @JsonProperty("name")

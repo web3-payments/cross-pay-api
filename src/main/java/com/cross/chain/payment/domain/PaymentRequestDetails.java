@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -33,9 +34,10 @@ public class PaymentRequestDetails {
     private Cryptocurrency cryptocurrency;
     private PaymentType paymentType;
     private PaymentStatus paymentStatus;
-    private List<ProductsPayment> products;
+    private List<ProductsPayment> products = new ArrayList<>();
+    @DBRef
+    private List<Transaction> transactions = new ArrayList<>();
     private CustomerRequiredInfo customerRequiredInfo;
-    private CustomerInfo customerInfo;
     private boolean adjustableQuantity;
     private String title;
 

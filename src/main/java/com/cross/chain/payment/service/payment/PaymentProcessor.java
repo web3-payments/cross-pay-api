@@ -1,6 +1,6 @@
 package com.cross.chain.payment.service.payment;
 
-import com.cross.chain.payment.dto.PaymentConfirmation;
+import com.cross.chain.payment.dto.PaymentConfirmationDTO;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.exception.PaymentRequestNotFound;
@@ -17,7 +17,7 @@ public interface PaymentProcessor {
 
     List<PaymentRequest> retrieveByUserAddress(String address);
 
-    void paymentConfirmation(String paymentHash, PaymentConfirmation paymentConfirmation) throws PaymentRequestNotFound;
+    void paymentConfirmation(String paymentHash, PaymentConfirmationDTO paymentConfirmationDTO) throws PaymentRequestNotFound;
 
     void paymentCancellation(String paymentHash) throws PaymentRequestNotFound;
 }

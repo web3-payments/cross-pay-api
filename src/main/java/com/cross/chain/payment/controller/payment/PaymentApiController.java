@@ -1,6 +1,6 @@
 package com.cross.chain.payment.controller.payment;
 
-import com.cross.chain.payment.dto.PaymentConfirmation;
+import com.cross.chain.payment.dto.PaymentConfirmationDTO;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.domain.PaymentType;
@@ -59,7 +59,7 @@ public interface PaymentApiController {
             @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
             @ApiResponse(responseCode = "404", description = "User not found") })
     ResponseEntity paymentConfirmation(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash,
-                                                       @Parameter(in = ParameterIn.DEFAULT, description = "Created payment object", schema=@Schema()) @RequestBody PaymentConfirmation body) throws PaymentRequestNotFound;
+                                                       @Parameter(in = ParameterIn.DEFAULT, description = "Created payment object", schema=@Schema()) @RequestBody PaymentConfirmationDTO body) throws PaymentRequestNotFound;
 
     @Operation(summary = "Payment cancellation", description = "", tags={ "payments" })
     @ApiResponses(value = {

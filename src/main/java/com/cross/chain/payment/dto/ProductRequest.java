@@ -40,7 +40,7 @@ public class ProductRequest {
 
   @Schema(example = "ETH")
   @JsonProperty("cryptocurrency")
-  private CryptocurrencyDto cryptocurrency;
+  private CryptocurrencyDTO cryptocurrency;
 
   @JsonProperty("cryptocurrencyId")
   private String cryptocurrencyId;

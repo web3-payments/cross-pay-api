@@ -44,7 +44,7 @@ public class ProductResponse {
 
   @Schema(example = "ETH")
   @JsonProperty("cryptocurrency")
-  private CryptocurrencyDto cryptocurrency;
+  private CryptocurrencyDTO cryptocurrency;
 
   @Valid
   @JsonProperty("image")

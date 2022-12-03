@@ -1,6 +1,6 @@
 package com.cross.chain.payment.controller.cryptocurrency;
 
-import com.cross.chain.payment.dto.CryptocurrencyDto;
+import com.cross.chain.payment.dto.CryptocurrencyDTO;
 import com.cross.chain.payment.service.cryptocurrency.CryptocurrencyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class CryptocurrencyApiControllerImpl implements CryptocurrencyApiControl
 
     @Override
     @GetMapping(value = CRYPTOCURRENCY, produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<CryptocurrencyDto>> getAllSupportedCryptocurrencies() {
+    public ResponseEntity<List<CryptocurrencyDTO>> getAllSupportedCryptocurrencies() {
         return ResponseEntity.ok(service.listOfSupportedCryptocurrencies());
     }
 }

@@ -55,7 +55,7 @@ public class PaymentRequest   {
 
   @Valid
   @JsonProperty("cryptocurrency")
-  private CryptocurrencyDto cryptocurrency;
+  private CryptocurrencyDTO cryptocurrency;
 
   @Schema(example = "false", description = "If true minAmount must be filled")
   @JsonProperty("minPayment")
@@ -103,10 +103,6 @@ public class PaymentRequest   {
   @Valid
   @JsonProperty("customerRequiredInfo")
   private CustomerRequiredInfo customerRequiredInfo;
-
-  @Valid
-  @JsonProperty("customerInfo")
-  private CustomerInfoDto customerInfo;
 
   @JsonProperty("paymentLink")
   @Schema(example = "https://buy.crosspay.com/test_28oaGzarrdlx6Pe288", description = "Required if paymentType is PaymentLink")

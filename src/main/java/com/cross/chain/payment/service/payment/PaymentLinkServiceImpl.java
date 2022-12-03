@@ -1,15 +1,18 @@
 package com.cross.chain.payment.service.payment;
 
 import com.cross.chain.payment.domain.*;
-import com.cross.chain.payment.exception.UserNotFoundException;
-import com.cross.chain.payment.mapper.PaymentRequestMapper;
+import com.cross.chain.payment.dto.PaymentConfirmationDTO;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
+import com.cross.chain.payment.exception.UserNotFoundException;
+import com.cross.chain.payment.mapper.PaymentRequestMapper;
+import com.cross.chain.payment.mapper.TransactionMapper;
 import com.cross.chain.payment.repository.PaymentRequestRepository;
+import com.cross.chain.payment.repository.TransactionRepository;
 import com.cross.chain.payment.repository.UserRepository;
 import com.cross.chain.payment.service.product.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -17,6 +20,7 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentLinkServiceImpl implements PaymentService {
 
     @Value("${payment.hash-length}")
@@ -25,17 +29,16 @@ public class PaymentLinkServiceImpl implements PaymentService {
     @Value("${payment.url}")
     private String url;
 
-    @Autowired
-    private PaymentRequestMapper mapper;
+    private final PaymentRequestMapper paymentRequestMapper;
 
-    @Autowired
-    private PaymentRequestRepository repository;
+    private final TransactionMapper transactionMapper;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final PaymentRequestRepository repository;
 
-    @Autowired
-    private ProductService productService;
+    private final UserRepository userRepository;
+
+    private final TransactionRepository transactionRepository;
+    private final ProductService productService;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
@@ -52,11 +55,10 @@ public class PaymentLinkServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentRequestDetails confirm(PaymentRequestDetails paymentRequest) {
-        //TODO: create a transaction history using the paymentConfirmation - PAYM-42
-        //paymentRequestDetails.setPaymentStatus(PaymentStatus.PAID);
-        //repository.save(paymentRequestDetails);
-        return null;
+    public PaymentRequestDetails confirm(PaymentRequestDetails paymentRequest, PaymentConfirmationDTO paymentConfirmationDTO) {
+        Transaction transaction = transactionMapper.map(paymentConfirmationDTO);
+        paymentRequest.getTransactions().add(transactionRepository.save(transaction));
+        return repository.save(paymentRequest);
     }
 
     @Override
@@ -65,13 +67,13 @@ public class PaymentLinkServiceImpl implements PaymentService {
         if(paymentRequest.getPaymentStatus().isFinalStatus()){
             throw new RuntimeException(); //TODO: change exception
         }
-        //TODO: increate the total supply since the payment was cancelled.
+        //TODO: increase the total supply since the payment was cancelled.
         paymentRequest.setPaymentStatus(PaymentStatus.DEACTIVATED);
         return repository.save(paymentRequest);
     }
 
     private PaymentRequestDetails createLink(PaymentRequest paymentRequest) throws UserNotFoundException {
-        PaymentRequestDetails paymentRequestDetails = mapper.map(paymentRequest);
+        PaymentRequestDetails paymentRequestDetails = paymentRequestMapper.map(paymentRequest);
         updateProductDetails(paymentRequestDetails.getProducts());
         User user = userRepository.findBySignerAddress(paymentRequest.getUserAddress()).orElseThrow(UserNotFoundException::new);
         paymentRequestDetails.setUser(user);

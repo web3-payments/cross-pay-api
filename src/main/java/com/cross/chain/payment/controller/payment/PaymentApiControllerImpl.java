@@ -1,6 +1,6 @@
 package com.cross.chain.payment.controller.payment;
 
-import com.cross.chain.payment.dto.PaymentConfirmation;
+import com.cross.chain.payment.dto.PaymentConfirmationDTO;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.domain.PaymentType;
@@ -46,7 +46,7 @@ public class PaymentApiControllerImpl implements PaymentApiController {
 
     @Override
     @PostMapping(value = PAYMENT_HASH_CONFIRMATION, consumes = { APPLICATION_JSON_VALUE })
-    public ResponseEntity paymentConfirmation(@PathVariable("paymentHash") String paymentHash, @Valid @RequestBody PaymentConfirmation body) throws PaymentRequestNotFound {
+    public ResponseEntity paymentConfirmation(@PathVariable("paymentHash") String paymentHash, @Valid @RequestBody PaymentConfirmationDTO body) throws PaymentRequestNotFound {
         paymentProcessor.paymentConfirmation(paymentHash, body);
         return ResponseEntity.noContent().build();
     }

@@ -1,14 +1,14 @@
 package com.cross.chain.payment.mapper;
 
 import com.cross.chain.payment.domain.Cryptocurrency;
-import com.cross.chain.payment.dto.CryptocurrencyDto;
+import com.cross.chain.payment.dto.CryptocurrencyDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CryptocurrencyMapper {
 
-    CryptocurrencyDto map(Cryptocurrency cryptocurrency);
+    CryptocurrencyDTO map(Cryptocurrency cryptocurrency);
 
-    Cryptocurrency map(CryptocurrencyDto cryptocurrency);
+    Cryptocurrency map(CryptocurrencyDTO cryptocurrency);
 
 }

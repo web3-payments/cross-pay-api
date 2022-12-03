@@ -1,7 +1,6 @@
 package com.cross.chain.payment.service.cryptocurrency;
 
-import com.cross.chain.payment.domain.Cryptocurrency;
-import com.cross.chain.payment.dto.CryptocurrencyDto;
+import com.cross.chain.payment.dto.CryptocurrencyDTO;
 import com.cross.chain.payment.mapper.CryptocurrencyMapper;
 import com.cross.chain.payment.repository.CryptocurrencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class CryptocurrencyServiceImpl implements CryptocurrencyService {
     private CryptocurrencyMapper mapper;
 
     @Override
-    public List<CryptocurrencyDto> listOfSupportedCryptocurrencies() {
+    public List<CryptocurrencyDTO> listOfSupportedCryptocurrencies() {
         return repository.findAll().stream().map(mapper::map).collect(Collectors.toList());
     }
 }

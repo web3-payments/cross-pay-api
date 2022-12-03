@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @Builder
 @Validated
-public class CryptocurrencyDto {
+public class CryptocurrencyDTO {
 
     private String id;
     private String address;
