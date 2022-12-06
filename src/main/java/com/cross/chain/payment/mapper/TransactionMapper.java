@@ -2,6 +2,9 @@ package com.cross.chain.payment.mapper;
 
 import com.cross.chain.payment.domain.Transaction;
 import com.cross.chain.payment.dto.PaymentConfirmationDTO;
+import com.cross.chain.payment.dto.TransactionDTO;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -24,4 +27,25 @@ public interface TransactionMapper {
     })
     Transaction map(PaymentConfirmationDTO paymentConfirmationDTO);
 
+    @Mappings({
+            @Mapping(source = "transaction.customerInfo.name", target = "customerInfoDTO.name"),
+            @Mapping(source = "transaction.customerInfo.email", target = "customerInfoDTO.email"),
+            @Mapping(source = "transaction.customerInfo.phoneNumber", target = "customerInfoDTO.phoneNumber"),
+            @Mapping(source = "transaction.customerInfo.shippingAddress", target = "customerInfoDTO.shippingAddress")
+    })
+    TransactionDTO map(Transaction transaction);
+
+    default Binary map(byte[]value){
+        if(value == null){
+            return null;
+        }
+        return new Binary(BsonBinarySubType.BINARY, value);
+    }
+
+    default byte[] map(Binary value) {
+        if(value == null){
+            return null;
+        }
+        return value.getData();
+    }
 }

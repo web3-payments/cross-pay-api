@@ -4,6 +4,7 @@ import com.cross.chain.payment.dto.PaymentConfirmationDTO;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.domain.PaymentType;
+import com.cross.chain.payment.dto.TransactionDTO;
 import com.cross.chain.payment.exception.PaymentRequestNotFound;
 import com.cross.chain.payment.service.payment.PaymentProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,12 @@ public class PaymentApiControllerImpl implements PaymentApiController {
     @GetMapping(value = PAYMENT_HASH, produces = { APPLICATION_JSON_VALUE })
     public ResponseEntity<PaymentRequest> paymentByHash(@PathVariable("paymentHash") String paymentHash) throws PaymentRequestNotFound {
         return ResponseEntity.ok(paymentProcessor.retrievePaymentRequest(paymentHash));
+    }
+
+    @Override
+    @GetMapping(value = PAYMENT_HASH_TRANSACTION, produces = { APPLICATION_JSON_VALUE })
+    public ResponseEntity<List<TransactionDTO>> transactionByPaymentHash(String paymentHash) throws PaymentRequestNotFound {
+        return ResponseEntity.ok(paymentProcessor.retrievePaymentTransactions(paymentHash));
     }
 
     @Override

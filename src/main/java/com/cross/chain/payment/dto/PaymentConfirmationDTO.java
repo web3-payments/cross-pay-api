@@ -8,6 +8,8 @@ import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * PaymentConfirmation
@@ -21,6 +23,14 @@ public class PaymentConfirmationDTO {
     @Valid
     @JsonProperty("transactionDetails")
     private TransactionDetailsDTO transactionDetailsDTO;
+
+    @Valid
+    @JsonProperty("amountPaid")
+    private BigDecimal amount;
+
+    @Valid
+    @JsonProperty("products")
+    private List<ProductPaymentRequest> products;
 
     @Valid
     @JsonProperty("customerInfo")

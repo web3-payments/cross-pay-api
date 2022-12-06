@@ -6,14 +6,15 @@ import com.cross.chain.payment.domain.User;
 import com.cross.chain.payment.dto.ProductRequest;
 import com.cross.chain.payment.dto.ProductResponse;
 import com.cross.chain.payment.exception.CryptocurrencyNotFoundException;
+import com.cross.chain.payment.exception.ProductNotFoundException;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import com.cross.chain.payment.mapper.ProductMapper;
 import com.cross.chain.payment.repository.CryptocurrencyRepository;
 import com.cross.chain.payment.repository.ProductRepository;
 import com.cross.chain.payment.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,19 +23,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final  ProductRepository productRepository;
 
-    @Autowired
-    private CryptocurrencyRepository cryptocurrencyRepository;
+    private final  CryptocurrencyRepository cryptocurrencyRepository;
 
-    @Autowired
-    private ProductMapper mapper;
+    private final  ProductMapper mapper;
 
     @Override
     public ProductResponse create(String userAddress, ProductRequest productRequest, MultipartFile file) throws IOException, UserNotFoundException, CryptocurrencyNotFoundException {
@@ -51,6 +49,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse create(String userAddress, ProductRequest productRequest) throws UserNotFoundException {
         Product product = mapper.map(productRequest);
         return mapper.map(persistProduct(userAddress, product));
+    }
+
+    @Override
+    public ProductResponse retrieveById(String id) throws ProductNotFoundException {
+        return mapper.map(productRepository.findById(id).orElseThrow(ProductNotFoundException::new));
     }
 
     private Product persistProduct(String userAddress, Product product) throws UserNotFoundException {

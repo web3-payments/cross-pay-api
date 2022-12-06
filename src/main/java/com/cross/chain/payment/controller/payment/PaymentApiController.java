@@ -4,6 +4,7 @@ import com.cross.chain.payment.dto.PaymentConfirmationDTO;
 import com.cross.chain.payment.dto.PaymentRequest;
 import com.cross.chain.payment.dto.PaymentResponse;
 import com.cross.chain.payment.domain.PaymentType;
+import com.cross.chain.payment.dto.TransactionDTO;
 import com.cross.chain.payment.exception.PaymentRequestNotFound;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,6 +29,7 @@ public interface PaymentApiController {
 
     String PAYMENT = "/payment";
     String PAYMENT_HASH = "/payment/{paymentHash}";
+    String PAYMENT_HASH_TRANSACTION = "/payment/{paymentHash}/transaction";
     String PAYMENT_HASH_CONFIRMATION = "/payment/{paymentHash}/confirmation";
     String PAYMENT_HASH_CANCELLATION = "/payment/{paymentHash}/cancellation";
     String PAYMENT_FIND_BY_USER_ADDRESS = "/payment/findByUserAddress";
@@ -45,6 +47,12 @@ public interface PaymentApiController {
             @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PaymentRequest.class))),
             @ApiResponse(responseCode = "400", description = "Invalid data supplied")})
     ResponseEntity<PaymentRequest> paymentByHash(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash) throws PaymentRequestNotFound;
+
+    @Operation(summary = "get all transaction with filter", description = "", tags={ "payments" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PaymentRequest.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid data supplied")})
+    ResponseEntity<List<TransactionDTO>> transactionByPaymentHash(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash) throws PaymentRequestNotFound;
 
     @Operation(summary = "Update payment given a hash", description = "", tags={ "payments" })
     @ApiResponses(value = {

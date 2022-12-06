@@ -1,42 +1,35 @@
 package com.cross.chain.payment.service.payment;
 
 import com.cross.chain.payment.domain.PaymentRequestDetails;
+import com.cross.chain.payment.domain.PaymentType;
 import com.cross.chain.payment.domain.ProductsPayment;
-import com.cross.chain.payment.dto.PaymentConfirmationDTO;
+import com.cross.chain.payment.dto.*;
 import com.cross.chain.payment.exception.PaymentProcessorException;
 import com.cross.chain.payment.exception.PaymentRequestNotFound;
 import com.cross.chain.payment.mapper.PaymentRequestMapper;
-import com.cross.chain.payment.dto.PaymentRequest;
-import com.cross.chain.payment.dto.PaymentResponse;
+import com.cross.chain.payment.mapper.TransactionMapper;
 import com.cross.chain.payment.repository.PaymentRequestRepository;
 import com.cross.chain.payment.service.product.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentProcessorImpl implements PaymentProcessor {
 
-    @Autowired
-    List<PaymentService> paymentServices;
+    private final List<PaymentService> paymentServices;
+    private final ProductService productService;
+    private final PaymentRequestMapper mapper;
 
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
-    private PaymentRequestMapper mapper;
-
-    @Autowired
-    private PaymentRequestRepository repository;
+    private final TransactionMapper transactionMapper;
+    private final PaymentRequestRepository repository;
 
     @Override
     public PaymentResponse processPaymentRequest(PaymentRequest paymentRequest) {
-        PaymentService paymentService = paymentServices.stream()
-                .filter(p -> p.applies(paymentRequest.getPaymentType()))
-                .findFirst()
-                .orElseThrow(PaymentProcessorException::new);
+        PaymentService paymentService = getPaymentService(paymentRequest.getPaymentType());
         return paymentService.create(paymentRequest);
     }
 
@@ -44,6 +37,17 @@ public class PaymentProcessorImpl implements PaymentProcessor {
     public PaymentRequest retrievePaymentRequest(String paymentHash) throws PaymentRequestNotFound {
         PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
         return mapper.map(paymentRequestDetails);
+    }
+
+    @Override
+    public List<TransactionDTO> retrievePaymentTransactions(String paymentHash) throws PaymentRequestNotFound {
+        PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
+        if(PaymentType.PAYMENT_LINK.equals(paymentRequestDetails.getPaymentType())){
+            return paymentRequestDetails.getTransactions().stream()
+                    .map(transactionMapper::map)
+                    .collect(Collectors.toList());
+        }
+        throw new RuntimeException(); //TODO: should return an correct exception - Take a look in the ways in done in MCS
     }
 
     @Override
@@ -72,20 +76,22 @@ public class PaymentProcessorImpl implements PaymentProcessor {
     @Override
     public void paymentConfirmation(String paymentHash, PaymentConfirmationDTO paymentConfirmationDTO) throws PaymentRequestNotFound {
         PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
-        PaymentService paymentService = paymentServices.stream()
-                .filter(p -> p.applies(paymentRequestDetails.getPaymentType()))
-                .findFirst()
-                .orElseThrow(PaymentProcessorException::new);
+        PaymentService paymentService = getPaymentService(paymentRequestDetails.getPaymentType());
         paymentService.confirm(paymentRequestDetails, paymentConfirmationDTO);
     }
 
     @Override
     public void paymentCancellation(String paymentHash) throws PaymentRequestNotFound {
         PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
+        PaymentService paymentService = getPaymentService(paymentRequestDetails.getPaymentType());
+        paymentService.cancel(paymentRequestDetails);
+    }
+
+    private PaymentService getPaymentService(PaymentType paymentType) {
         PaymentService paymentService = paymentServices.stream()
-                .filter(p -> p.applies(paymentRequestDetails.getPaymentType()))
+                .filter(p -> p.applies(paymentType))
                 .findFirst()
                 .orElseThrow(PaymentProcessorException::new);
-        paymentService.cancel(paymentRequestDetails);
+        return paymentService;
     }
 }
