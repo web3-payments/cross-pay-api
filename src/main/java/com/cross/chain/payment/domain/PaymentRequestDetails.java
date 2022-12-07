@@ -20,6 +20,7 @@ public class PaymentRequestDetails {
 
     @Id
     private String id;
+    private String description;
     private String creditAddress;
     private String userAddress;
     private String hash;
