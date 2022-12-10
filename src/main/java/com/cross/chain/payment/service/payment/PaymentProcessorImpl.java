@@ -54,16 +54,14 @@ public class PaymentProcessorImpl implements PaymentProcessor {
     public PaymentRequest updatePaymentRequest(String paymentHash, PaymentRequest paymentRequest) throws PaymentRequestNotFound {
         PaymentRequestDetails paymentRequestDetails = repository.findByHash(paymentHash).orElseThrow(PaymentRequestNotFound::new);
         PaymentRequestDetails paymentUpdated = mapper.map(paymentRequest);
-//        paymentRequestDetails.setCustomerInfo(paymentUpdated.getCustomerInfo());
+        paymentRequestDetails.setCustomerRequiredInfo(paymentUpdated.getCustomerRequiredInfo());
+        paymentRequestDetails.setAdjustableQuantity(paymentUpdated.isAdjustableQuantity());
+        paymentRequestDetails.setCreditAddress(paymentUpdated.getCreditAddress());
+        paymentRequestDetails.setDescription(paymentUpdated.getDescription());
         paymentRequestDetails.setAmount(paymentUpdated.getAmount());
         paymentRequestDetails.setProducts(paymentUpdated.getProducts());
-        updateProductDetails(paymentRequestDetails.getProducts());//TODO: check if I remove it from here mongodb will automatically handle the update of the product
         repository.save(paymentRequestDetails);
         return mapper.map(paymentRequestDetails);
-    }
-
-    private void updateProductDetails(List<ProductsPayment> products) {
-        products.forEach(item-> productService.update(item.getProduct()));
     }
 
     @Override

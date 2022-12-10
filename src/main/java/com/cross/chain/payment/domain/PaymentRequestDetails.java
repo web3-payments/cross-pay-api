@@ -1,6 +1,5 @@
 package com.cross.chain.payment.domain;
 
-import com.cross.chain.payment.dto.CurrencySupported;
 import com.cross.chain.payment.dto.CustomerRequiredInfo;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

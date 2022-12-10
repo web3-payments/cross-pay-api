@@ -1,5 +1,6 @@
 package com.cross.chain.payment.dto;
 
+import com.cross.chain.payment.domain.Network;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +17,8 @@ public class CryptocurrencyDTO {
     private String address;
     @JsonProperty("nativeToken")
     private boolean nativeToken;
-    @JsonProperty("chainId")
-    private String chainId;
+    @JsonProperty("network")
+    private NetworkDTO network;
     @JsonProperty("name")
     private String name;
     @JsonProperty("symbol")
@@ -26,5 +27,7 @@ public class CryptocurrencyDTO {
     private int decimals;
     @JsonProperty("blockExplorer")
     private BlockExplorerDTO blockExplorer;
+    @JsonProperty("smartContract")
+    private SmartContractDTO smartContract;
 
 }

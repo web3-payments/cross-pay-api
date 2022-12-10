@@ -13,11 +13,14 @@ public class Cryptocurrency {
     private String id;
     private String address;
     private boolean nativeToken;
-    private String chainId;
+    @DBRef
+    private Network network;
     private String name;
     private String symbol;
     private int decimals;
     @DBRef
     private BlockExplorer blockExplorer;
+    @DBRef
+    private SmartContract smartContract;
 
 }
