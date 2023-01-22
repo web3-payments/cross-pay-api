@@ -1,16 +1,15 @@
 package com.cross.chain.payment.service.payment;
 
-import com.cross.chain.payment.domain.*;
-import com.cross.chain.payment.dto.*;
+import com.cross.chain.payment.exception.PaymentLinkCreationException;
 import com.cross.chain.payment.exception.ProductNotFoundException;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import com.cross.chain.payment.mapper.PaymentRequestMapper;
 import com.cross.chain.payment.mapper.ProductMapper;
 import com.cross.chain.payment.mapper.TransactionMapper;
-import com.cross.chain.payment.repository.PaymentRequestRepository;
-import com.cross.chain.payment.repository.TransactionRepository;
-import com.cross.chain.payment.repository.UserRepository;
-import com.cross.chain.payment.service.product.ProductService;
+import com.cross.chain.payment.model.*;
+import com.cross.chain.payment.model.enums.PaymentStatus;
+import com.cross.chain.payment.model.enums.PaymentType;
+import com.cross.chain.payment.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,45 +34,45 @@ public class PaymentLinkServiceImpl implements PaymentService {
 
     private final TransactionMapper transactionMapper;
 
-    private final PaymentRequestRepository repository;
+    private final PaymentRequestDbService paymentRequestDbService;
 
-    private final UserRepository userRepository;
+    private final UserDbService userDbService;
 
-    private final TransactionRepository transactionRepository;
-    private final ProductService productService;
+    private final TransactionDbService transactionDbService;
+    private final ProductDbService productDbService;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        validatePayment(paymentRequest);
-        PaymentRequestDetails paymentRequestDetails;
+        validatePayment(paymentRequest); //TODO: move this to a bean validator?
+        PaymentRequestDTO paymentRequestDTO = paymentRequestMapper.map(paymentRequest);
         try {
-            paymentRequestDetails = createLink(paymentRequest);
+            paymentRequestDTO = createLink(paymentRequestDTO);
         } catch (UserNotFoundException e) {
-            throw new RuntimeException(e); //TODO: Create a paymentLinkCreation Exception
+            throw new PaymentLinkCreationException(e);
         }
         return PaymentResponse.builder()
-                .paymentLink(paymentRequestDetails.getPaymentLink())
+                .paymentLink(paymentRequestDTO.getPaymentLink())
                 .build();
     }
 
     @Override
-    public PaymentRequestDetails confirm(PaymentRequestDetails paymentRequest, PaymentConfirmationDTO paymentConfirmationDTO) {
-        Transaction transaction = transactionMapper.map(paymentConfirmationDTO);
+    public PaymentRequestDTO confirm(PaymentRequestDTO paymentRequest, PaymentConfirmationDTO paymentConfirmationDTO) {
+        TransactionDTO transaction = transactionMapper.map(paymentConfirmationDTO);
         transaction.setCryptocurrency(paymentRequest.getCryptocurrency());
         updateProductDetails(transaction.getProducts());
-        paymentRequest.getTransactions().add(transactionRepository.save(transaction));
-        return repository.save(paymentRequest);
+        paymentRequest.getTransactions().add(transactionDbService.save(transaction));
+        return paymentRequestDbService.save(paymentRequest);
     }
 
     @Override
-    public PaymentRequestDetails cancel(PaymentRequestDetails paymentRequest) {
+    public PaymentRequestDTO cancel(PaymentRequestDTO paymentRequest) {
         //TODO: create a transaction history using the paymentConfirmation
         if(paymentRequest.getPaymentStatus().isFinalStatus()){
             throw new RuntimeException(); //TODO: change exception
         }
         //TODO: increase the total supply since the payment was cancelled.
         paymentRequest.setPaymentStatus(PaymentStatus.DEACTIVATED);
-        return repository.save(paymentRequest);
+        return paymentRequestDbService.save(paymentRequest);
     }
 
     @Override
@@ -88,22 +87,20 @@ public class PaymentLinkServiceImpl implements PaymentService {
     }
 
 
-    private PaymentRequestDetails createLink(PaymentRequest paymentRequest) throws UserNotFoundException {
-        PaymentRequestDetails paymentRequestDetails = paymentRequestMapper.map(paymentRequest);
-        //updateProductDetails(paymentRequestDetails.getProducts()); // product will be updated during the settlement
-        User user = userRepository.findBySignerAddress(paymentRequest.getUserAddress()).orElseThrow(UserNotFoundException::new);
-        paymentRequestDetails.setUser(user);
-        paymentRequestDetails.setHash(RandomStringUtils.randomAlphabetic(hashLength));
-        paymentRequestDetails.setPaymentLink(url.concat("/").concat(paymentRequestDetails.getHash()));
-        paymentRequestDetails.setPaymentStatus(PaymentStatus.ACTIVATED);
-        return repository.save(paymentRequestDetails);
+    private PaymentRequestDTO createLink(PaymentRequestDTO paymentRequestDTO) throws UserNotFoundException {
+        UserDTO user = userDbService.findBySignerAddress(paymentRequestDTO.getUserAddress());
+        paymentRequestDTO.setUser(user);
+        paymentRequestDTO.setHash(RandomStringUtils.randomAlphabetic(hashLength));
+        paymentRequestDTO.setPaymentLink(url.concat("/").concat(paymentRequestDTO.getHash()));
+        paymentRequestDTO.setPaymentStatus(PaymentStatus.ACTIVATED);
+        return paymentRequestDbService.save(paymentRequestDTO);
     }
 
-    private void updateProductDetails(List<ProductsPayment> products) {
+    private void updateProductDetails(List<ProductPaymentDTO> products) {
         products.forEach(item-> {
-            ProductResponse product;
+            ProductDTO product;
             try {
-                product = productService.retrieveById(item.getProduct().getId());
+                product = productDbService.findById(item.getProduct().getId());
             } catch (ProductNotFoundException e) {
                 throw new RuntimeException(e); //TODO: throw an payment Execution error - Product not found
             }
@@ -111,7 +108,7 @@ public class PaymentLinkServiceImpl implements PaymentService {
                 throw new RuntimeException(); //TODO: throw an payment Execution error - Amount selected not valid
             }
             product.setTotalSupply(product.getTotalSupply() - item.getQuantity());
-            productService.update(productMapper.map(product));
+            productDbService.save(product);
         });
     }
 }

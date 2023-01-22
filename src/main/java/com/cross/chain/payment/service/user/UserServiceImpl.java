@@ -1,14 +1,14 @@
 package com.cross.chain.payment.service.user;
 
-import com.cross.chain.payment.domain.User;
-import com.cross.chain.payment.dto.UserRequest;
-import com.cross.chain.payment.dto.WalletRequest;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import com.cross.chain.payment.mapper.UserMapper;
-import com.cross.chain.payment.repository.UserRepository;
+import com.cross.chain.payment.model.UserDTO;
+import com.cross.chain.payment.model.UserRequest;
+import com.cross.chain.payment.model.WalletRequest;
+import com.cross.chain.payment.persistence.UserDbService;
+import lombok.RequiredArgsConstructor;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,22 +17,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository repository;
+    private final UserDbService userDbService;
 
-    @Autowired
-    private UserMapper mapper;
+    private final UserMapper mapper;
 
     @Override
     public UserRequest save(UserRequest userRequest) {
-        return mapper.map(repository.save(mapper.map(userRequest)));
+        return mapper.map(userDbService.save(mapper.map(userRequest)));
     }
 
     @Override
     public UserRequest retrieveUser(String address) throws UserNotFoundException {
-        return mapper.map(repository.findBySignerAddress(address).orElseThrow(UserNotFoundException::new));
+        return mapper.map(userDbService.findBySignerAddress(address));
     }
 
     @Override
@@ -42,21 +41,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRequest update(UserRequest userRequest) throws UserNotFoundException {
-        User userFound = repository.findBySignerAddress(userRequest.getSignerAddress()).orElseThrow(UserNotFoundException::new);
+        UserDTO userFound = userDbService.findBySignerAddress(userRequest.getSignerAddress());
         userFound.setCompanyName(userRequest.getCompanyName());
         userFound.setFirstName(userRequest.getFirstName());
         userFound.setLastName(userRequest.getLastName());
         userFound.setEmail(userRequest.getEmail());
         userFound.setPhone(userRequest.getPhone());
-        return mapper.map(repository.save(userFound));
+        return mapper.map(userDbService.save(userFound));
     }
 
     @Override
     public UserRequest uploadImage(String address, MultipartFile file) throws IOException, UserNotFoundException {
         Binary image = new Binary(BsonBinarySubType.BINARY, file.getBytes());
-        User user = repository.findBySignerAddress(address).orElseThrow(UserNotFoundException::new);
+        UserDTO user = userDbService.findBySignerAddress(address);
         user.setImage(image);
-        return mapper.map(repository.save(user));
+        return mapper.map(userDbService.save(user));
     }
 
 }

@@ -1,18 +1,18 @@
 package com.cross.chain.payment.service.payment;
 
-import com.cross.chain.payment.domain.PaymentRequestDetails;
-import com.cross.chain.payment.dto.PaymentConfirmationDTO;
-import com.cross.chain.payment.dto.PaymentRequest;
-import com.cross.chain.payment.dto.PaymentResponse;
-import com.cross.chain.payment.domain.PaymentType;
+import com.cross.chain.payment.model.PaymentConfirmationDTO;
+import com.cross.chain.payment.model.PaymentRequest;
+import com.cross.chain.payment.model.PaymentRequestDTO;
+import com.cross.chain.payment.model.PaymentResponse;
+import com.cross.chain.payment.model.enums.PaymentType;
 
 public interface PaymentService {
 
     PaymentResponse create(PaymentRequest paymentRequest);
 
-    PaymentRequestDetails confirm(PaymentRequestDetails paymentRequest, PaymentConfirmationDTO paymentConfirmationDTO);
+    PaymentRequestDTO confirm(PaymentRequestDTO paymentRequest, PaymentConfirmationDTO paymentConfirmationDTO);
 
-    PaymentRequestDetails cancel(PaymentRequestDetails paymentRequest);
+    PaymentRequestDTO cancel(PaymentRequestDTO paymentRequest);
 
     void validatePayment(PaymentRequest paymentRequest);
     default boolean applies(PaymentType type){

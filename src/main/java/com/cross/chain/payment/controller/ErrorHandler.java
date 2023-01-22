@@ -1,6 +1,6 @@
 package com.cross.chain.payment.controller;
 
-import com.cross.chain.payment.dto.ErrorModel;
+import com.cross.chain.payment.model.ErrorModel;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

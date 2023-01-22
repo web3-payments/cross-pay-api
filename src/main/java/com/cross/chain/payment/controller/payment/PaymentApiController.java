@@ -1,10 +1,7 @@
 package com.cross.chain.payment.controller.payment;
 
-import com.cross.chain.payment.dto.PaymentConfirmationDTO;
-import com.cross.chain.payment.dto.PaymentRequest;
-import com.cross.chain.payment.dto.PaymentResponse;
-import com.cross.chain.payment.domain.PaymentType;
-import com.cross.chain.payment.dto.TransactionDTO;
+import com.cross.chain.payment.model.*;
+import com.cross.chain.payment.model.enums.PaymentType;
 import com.cross.chain.payment.exception.PaymentRequestNotFound;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,9 +13,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.MediaType.*;
@@ -52,7 +51,7 @@ public interface PaymentApiController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PaymentRequest.class))),
             @ApiResponse(responseCode = "400", description = "Invalid data supplied")})
-    ResponseEntity<List<TransactionDTO>> transactionByPaymentHash(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash) throws PaymentRequestNotFound;
+    ResponseEntity<List<Transaction>> transactionByPaymentHash(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash) throws PaymentRequestNotFound;
 
     @Operation(summary = "Update payment given a hash", description = "", tags={ "payments" })
     @ApiResponses(value = {
@@ -67,7 +66,7 @@ public interface PaymentApiController {
             @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
             @ApiResponse(responseCode = "404", description = "User not found") })
     ResponseEntity paymentConfirmation(@Parameter(in = ParameterIn.PATH, description = "hash that identify the payment" ,schema=@Schema())@PathVariable(value = "paymentHash") String paymentHash,
-                                                       @Parameter(in = ParameterIn.DEFAULT, description = "Created payment object", schema=@Schema()) @RequestBody PaymentConfirmationDTO body) throws PaymentRequestNotFound;
+                                                       @Parameter(in = ParameterIn.DEFAULT, description = "Created payment object", schema=@Schema()) @RequestBody PaymentConfirmationRequest body) throws PaymentRequestNotFound;
 
     @Operation(summary = "Payment cancellation", description = "", tags={ "payments" })
     @ApiResponses(value = {

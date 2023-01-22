@@ -1,8 +1,8 @@
 package com.cross.chain.payment.service.user;
 
-import com.cross.chain.payment.dto.WalletRequest;
+import com.cross.chain.payment.model.WalletRequest;
 import com.cross.chain.payment.exception.UserNotFoundException;
-import com.cross.chain.payment.dto.UserRequest;
+import com.cross.chain.payment.model.UserRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

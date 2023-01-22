@@ -1,7 +1,9 @@
 package com.cross.chain.payment.mapper;
 
-import com.cross.chain.payment.domain.PaymentRequestDetails;
-import com.cross.chain.payment.dto.PaymentRequest;
+import com.cross.chain.payment.model.PaymentConfirmationDTO;
+import com.cross.chain.payment.model.PaymentConfirmationRequest;
+import com.cross.chain.payment.model.PaymentRequest;
+import com.cross.chain.payment.model.PaymentRequestDTO;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.mapstruct.Mapper;
@@ -9,9 +11,11 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface PaymentRequestMapper {
 
-    PaymentRequestDetails map(PaymentRequest paymentRequest);
+    PaymentRequestDTO map(PaymentRequest paymentRequest);
 
-    PaymentRequest map(PaymentRequestDetails paymentRequestDetails);
+    PaymentRequest map(PaymentRequestDTO paymentRequest);
+
+    PaymentConfirmationDTO map(PaymentConfirmationRequest paymentConfirmationDTO);
 
     default Binary map(byte[] value){
         if(value == null){

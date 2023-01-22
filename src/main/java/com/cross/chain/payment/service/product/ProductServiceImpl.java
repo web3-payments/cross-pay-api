@@ -1,17 +1,12 @@
 package com.cross.chain.payment.service.product;
 
-import com.cross.chain.payment.domain.Cryptocurrency;
-import com.cross.chain.payment.domain.Product;
-import com.cross.chain.payment.domain.User;
-import com.cross.chain.payment.dto.ProductRequest;
-import com.cross.chain.payment.dto.ProductResponse;
 import com.cross.chain.payment.exception.CryptocurrencyNotFoundException;
-import com.cross.chain.payment.exception.ProductNotFoundException;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import com.cross.chain.payment.mapper.ProductMapper;
-import com.cross.chain.payment.repository.CryptocurrencyRepository;
-import com.cross.chain.payment.repository.ProductRepository;
-import com.cross.chain.payment.repository.UserRepository;
+import com.cross.chain.payment.model.*;
+import com.cross.chain.payment.persistence.CryptocurrencyDbService;
+import com.cross.chain.payment.persistence.ProductDbService;
+import com.cross.chain.payment.persistence.UserDbService;
 import lombok.RequiredArgsConstructor;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
@@ -26,56 +21,45 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    private final UserRepository userRepository;
+    private final UserDbService userDbService;
 
-    private final  ProductRepository productRepository;
+    private final ProductDbService productDbService;
 
-    private final  CryptocurrencyRepository cryptocurrencyRepository;
+    private final CryptocurrencyDbService cryptocurrencyDbService;
 
     private final  ProductMapper mapper;
 
     @Override
     public ProductResponse create(String userAddress, ProductRequest productRequest, MultipartFile file) throws IOException, UserNotFoundException, CryptocurrencyNotFoundException {
         Binary image = new Binary(BsonBinarySubType.BINARY, file.getBytes());
-        Cryptocurrency cryptocurrency = cryptocurrencyRepository.findById(productRequest.getCryptocurrencyId()).
-                orElseThrow(CryptocurrencyNotFoundException::new);
-        Product product = mapper.map(productRequest);
-        product.setCryptocurrency(cryptocurrency);
-        product.setImage(image);
-        return mapper.map(persistProduct(userAddress, product));
+        CryptocurrencyDTO cryptocurrencyDTO = cryptocurrencyDbService.findById(productRequest.getCryptocurrencyId());
+        ProductDTO productDTO = mapper.map(productRequest);
+        productDTO.setCryptocurrency(cryptocurrencyDTO);
+        productDTO.setImage(image);
+        return mapper.map(persistProduct(userAddress, productDTO));
     }
 
     @Override
     public ProductResponse create(String userAddress, ProductRequest productRequest) throws UserNotFoundException {
-        Product product = mapper.map(productRequest);
-        return mapper.map(persistProduct(userAddress, product));
+        ProductDTO productDTO = mapper.map(productRequest);
+        return mapper.map(persistProduct(userAddress, productDTO));
     }
 
-    @Override
-    public ProductResponse retrieveById(String id) throws ProductNotFoundException {
-        return mapper.map(productRepository.findById(id).orElseThrow(ProductNotFoundException::new));
-    }
-
-    private Product persistProduct(String userAddress, Product product) throws UserNotFoundException {
-        Product productCreated = productRepository.save(product);
-        User user = userRepository.findBySignerAddress(userAddress).orElseThrow(UserNotFoundException::new);
+    private ProductDTO persistProduct(String userAddress, ProductDTO productDTO) throws UserNotFoundException {
+        ProductDTO productCreated = productDbService.save(productDTO);
+        UserDTO user = userDbService.findBySignerAddress(userAddress);
         user.getProducts().add(productCreated);
-        userRepository.save(user);
+        userDbService.save(user);
         return productCreated;
     }
 
     @Override
     public List<ProductResponse> getAllByUserAddress(String userAddress) throws UserNotFoundException {
-        return userRepository.findBySignerAddress(userAddress)
-                .orElseThrow(UserNotFoundException::new)
+        return userDbService.findBySignerAddress(userAddress)
                 .getProducts()
                 .stream()
                 .map(mapper::map)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void update(Product product) {
-        productRepository.save(product);
-    }
 }

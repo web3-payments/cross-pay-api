@@ -1,8 +1,8 @@
 package com.cross.chain.payment.mapper;
 
-import com.cross.chain.payment.domain.Product;
-import com.cross.chain.payment.dto.ProductRequest;
-import com.cross.chain.payment.dto.ProductResponse;
+import com.cross.chain.payment.model.ProductDTO;
+import com.cross.chain.payment.model.ProductRequest;
+import com.cross.chain.payment.model.ProductResponse;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.mapstruct.Mapper;
@@ -10,11 +10,11 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    Product map(ProductRequest productRequest);
+    ProductDTO map(ProductRequest productRequest);
 
-    Product map(ProductResponse productResponse);
+    ProductDTO map(ProductResponse productResponse);
 
-    ProductResponse map(Product product);
+    ProductResponse map(ProductDTO productEntity);
 
     default byte[] mapImage(Binary image) {
         if(image == null){

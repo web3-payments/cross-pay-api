@@ -1,7 +1,7 @@
 package com.cross.chain.payment.mapper;
 
-import com.cross.chain.payment.domain.User;
-import com.cross.chain.payment.dto.UserRequest;
+import com.cross.chain.payment.model.UserDTO;
+import com.cross.chain.payment.model.UserRequest;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.mapstruct.Mapper;
@@ -9,9 +9,9 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserRequest map(User user);
+    UserRequest map(UserDTO userEntity);
 
-    User map(UserRequest user);
+    UserDTO map(UserRequest user);
 
     default byte[] map(Binary image) {
         if(image == null){

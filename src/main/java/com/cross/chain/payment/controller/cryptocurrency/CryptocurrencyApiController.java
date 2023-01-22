@@ -1,6 +1,7 @@
 package com.cross.chain.payment.controller.cryptocurrency;
 
-import com.cross.chain.payment.dto.CryptocurrencyDTO;
+import com.cross.chain.payment.model.Cryptocurrency;
+import com.cross.chain.payment.model.CryptocurrencyDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,5 +23,5 @@ public interface CryptocurrencyApiController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = CryptocurrencyDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid data supplied")})
-    ResponseEntity<List<CryptocurrencyDTO>> getAllSupportedCryptocurrencies();
+    ResponseEntity<List<Cryptocurrency>> getAllSupportedCryptocurrencies();
 }

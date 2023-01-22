@@ -1,11 +1,11 @@
 package com.cross.chain.payment.service.cryptocurrency;
 
-import com.cross.chain.payment.dto.CryptocurrencyDTO;
+import com.cross.chain.payment.model.Cryptocurrency;
 
 import java.util.List;
 
 public interface CryptocurrencyService {
 
-    List<CryptocurrencyDTO> listOfSupportedCryptocurrencies();
+    List<Cryptocurrency> listOfSupportedCryptocurrencies();
 
 }

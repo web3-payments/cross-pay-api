@@ -1,8 +1,8 @@
 package com.cross.chain.payment.controller.user;
 
-import com.cross.chain.payment.dto.WalletRequest;
+import com.cross.chain.payment.model.WalletRequest;
 import com.cross.chain.payment.exception.UserNotFoundException;
-import com.cross.chain.payment.dto.UserRequest;
+import com.cross.chain.payment.model.UserRequest;
 import com.cross.chain.payment.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

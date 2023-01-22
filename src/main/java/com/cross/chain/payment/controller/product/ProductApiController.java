@@ -1,7 +1,7 @@
 package com.cross.chain.payment.controller.product;
 
-import com.cross.chain.payment.dto.ProductRequest;
-import com.cross.chain.payment.dto.ProductResponse;
+import com.cross.chain.payment.model.ProductRequest;
+import com.cross.chain.payment.model.ProductResponse;
 import com.cross.chain.payment.exception.CryptocurrencyNotFoundException;
 import com.cross.chain.payment.exception.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
