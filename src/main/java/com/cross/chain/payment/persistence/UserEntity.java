@@ -7,7 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +31,6 @@ class UserEntity {
     @DBRef
     private List<CustomerEntity> customers = new ArrayList<>();
     @LastModifiedDate
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
 }

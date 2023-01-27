@@ -3,7 +3,7 @@ package com.cross.chain.payment.model;
 import lombok.Data;
 import org.bson.types.Binary;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,5 +22,5 @@ class UserDTO {
     private List<WalletDTO> wallets = new ArrayList<>();
     private List<ProductDTO> products = new ArrayList<>();
     private List<CustomerDTO> customers = new ArrayList<>();
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 }

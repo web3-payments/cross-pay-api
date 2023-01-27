@@ -5,6 +5,7 @@ import org.bson.types.Binary;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 public class ProductDTO {
@@ -16,7 +17,7 @@ public class ProductDTO {
     private int totalSupply;
     private CryptocurrencyDTO cryptocurrency;
     private Binary image;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

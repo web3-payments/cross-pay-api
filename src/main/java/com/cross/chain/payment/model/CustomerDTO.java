@@ -2,7 +2,7 @@ package com.cross.chain.payment.model;
 
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 public class CustomerDTO {
@@ -11,6 +11,6 @@ public class CustomerDTO {
     private String email;
     private String phoneNumber;
     private ShippingAddressDTO shippingAddress;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,7 +19,7 @@ public class TransactionDTO {
     private String toAddress;
     private String fromAddress;
     private int confirmations;
-    private Instant executionDate;
+    private LocalDateTime executionDate;
     private BigDecimal amount;
     private CryptocurrencyDTO cryptocurrency;
     private CustomerInfoDTO customerInfo;

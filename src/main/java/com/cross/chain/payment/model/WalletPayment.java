@@ -2,8 +2,10 @@ package com.cross.chain.payment.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -11,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Validated
 public class WalletPayment {
 

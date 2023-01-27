@@ -7,12 +7,13 @@ import com.cross.chain.payment.model.PaymentRequestDTO;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface PaymentRequestMapper {
 
     PaymentRequestDTO map(PaymentRequest paymentRequest);
-
+    @Mapping(source = "createdAt", target = "createdAt", dateFormat = "dd/MM/yyyy HH:mm:ss")
     PaymentRequest map(PaymentRequestDTO paymentRequest);
 
     PaymentConfirmationDTO map(PaymentConfirmationRequest paymentConfirmationDTO);

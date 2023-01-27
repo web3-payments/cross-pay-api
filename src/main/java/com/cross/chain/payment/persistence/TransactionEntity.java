@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ class TransactionEntity {
     private int confirmations;
     @Indexed
     @CreatedDate
-    private Instant executionDate;
+    private LocalDateTime executionDate;
     private BigDecimal amount;
     @DBRef
     private CryptocurrencyEntity cryptocurrency;

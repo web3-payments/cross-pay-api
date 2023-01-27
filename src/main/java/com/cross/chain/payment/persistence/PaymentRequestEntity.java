@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ class PaymentRequestEntity {
     private String paymentLink;
     @Indexed
     @CreatedDate
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     private BigDecimal amount;
     @DBRef
     private UserEntity user;

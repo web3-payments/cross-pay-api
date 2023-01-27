@@ -6,8 +6,10 @@ import com.cross.chain.payment.validators.EnumValuePattern;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -20,6 +22,8 @@ import java.util.List;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Validated
 public class PaymentRequest   {
@@ -46,7 +50,7 @@ public class PaymentRequest   {
   private String hash;
 
   @JsonProperty("createdAt")
-  private Instant createdAt;
+  private String createdAt;
 
   @Valid
   @Schema(example = "55.34", description = "")

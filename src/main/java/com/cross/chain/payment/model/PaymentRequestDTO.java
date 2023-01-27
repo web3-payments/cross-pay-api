@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public class PaymentRequestDTO {
   private String description;
   private PaymentType paymentType;
   private String hash;
-  private Instant createdAt;
+  private LocalDateTime createdAt;
   private BigDecimal amount;
   private CryptocurrencyDTO cryptocurrency;
   private Boolean minPayment;
