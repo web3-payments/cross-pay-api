@@ -14,6 +14,8 @@ import javax.validation.Valid;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductPaymentRequestDTO {
     private ProductDTO product;
     private int quantity;

@@ -1,9 +1,14 @@
 package com.cross.chain.payment.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class WalletDTO {
     private String name;
     private String address;
