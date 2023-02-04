@@ -1,5 +1,6 @@
 package com.cross.chain.payment.mapper;
 
+import com.cross.chain.payment.model.InvoiceConfirmationDTO;
 import com.cross.chain.payment.model.PaymentConfirmationDTO;
 import com.cross.chain.payment.model.Transaction;
 import com.cross.chain.payment.model.TransactionDTO;
@@ -26,6 +27,21 @@ public interface TransactionMapper {
         @Mapping(source = "paymentConfirmationDTO.customerInfoDTO.shippingAddress", target = "customerInfo.shippingAddress")
     })
     TransactionDTO map(PaymentConfirmationDTO paymentConfirmationDTO);
+
+    @Mappings({
+            @Mapping(source = "invoiceConfirmationDTO.transactionDetails.transactionHash", target = "transactionHash"),
+            @Mapping(source = "invoiceConfirmationDTO.transactionDetails.blockHash", target = "blockHash"),
+            @Mapping(source = "invoiceConfirmationDTO.transactionDetails.blockNumber", target = "blockNumber"),
+            @Mapping(source = "invoiceConfirmationDTO.transactionDetails.gasUsed", target = "gasUsed"),
+            @Mapping(source = "invoiceConfirmationDTO.transactionDetails.toAddress", target = "toAddress"),
+            @Mapping(source = "invoiceConfirmationDTO.transactionDetails.fromAddress", target = "fromAddress"),
+            @Mapping(source = "invoiceConfirmationDTO.transactionDetails.confirmations", target = "confirmations"),
+            @Mapping(source = "invoiceConfirmationDTO.customerInfoDTO.name", target = "customerInfo.name"),
+            @Mapping(source = "invoiceConfirmationDTO.customerInfoDTO.email", target = "customerInfo.email"),
+            @Mapping(source = "invoiceConfirmationDTO.customerInfoDTO.phoneNumber", target = "customerInfo.phoneNumber"),
+            @Mapping(source = "invoiceConfirmationDTO.customerInfoDTO.shippingAddress", target = "customerInfo.shippingAddress")
+    })
+    TransactionDTO map(InvoiceConfirmationDTO invoiceConfirmationDTO);
 
     @Mappings({
             @Mapping(source = "transaction.customerInfo.name", target = "customerInfo.name"),
