@@ -11,6 +11,9 @@ spring:
 payment:
   hash-length: 50
   url: localhost:3000/crypto-payment
+invoice:
+  hash-length: 50
+  url: localhost:3000/crypto-invoice
 
 springfox:
   documentation:
